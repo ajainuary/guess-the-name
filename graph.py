@@ -1,44 +1,42 @@
 import sys
-
 import rdflib
-
-from SPARQLWrapper import SPARQLWrapper, JSON
+from rdflib import URIRef, ConjunctiveGraph
+from SPARQLWrapper import SPARQLWrapper, JSON, N3, RDF
 
 endpoint_url = "https://query.wikidata.org/sparql"
-query = """SELECT ?wdLabel ?ps_Label ?wdpqLabel ?pq_Label {
-  VALUES (?company) {(wd:Q1001)}
-  
-  ?company ?p ?statement .
-  ?statement ?ps ?ps_ .
-  
-  ?wd wikibase:claim ?p.
-  ?wd wikibase:statementProperty ?ps.
-  
-  OPTIONAL {
-  ?statement ?pq ?pq_ .
-  ?wdpq wikibase:qualifier ?pq .
-  }
-  
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
-} ORDER BY ?wd ?statement ?ps_
+query = """construct{
+  ?q ?realAtt ?ps_.
+}
+WHERE {
+  BIND(wd:Q1001 AS ?q)
+  wd:Q1001 ?p1 ?o.
+  ?realAtt wikibase:claim ?p1.
+  ?realAtt rdfs:label ?attName.
+  ?realAtt wikibase:statementProperty ?ps.
+  ?o ?ps ?ps_ .
+  ?ps_ rdfs:label ?psName.
+  FILTER(((LANG(?attName)) = "hi"))
+  FILTER(((LANG(?psName)) = "hi"))
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "hi". }
+}
 """
 
 
 def get_results(endpoint_url, query):
-    user_agent = "WDQS-example Python/%s.%s" % (
-        sys.version_info[0], sys.version_info[1])
-    # TODO adjust user agent; see https://w.wiki/CX6
-    sparql = SPARQLWrapper(endpoint_url, agent=user_agent)
+    sparql = SPARQLWrapper(endpoint_url)
     sparql.setQuery(query)
-    sparql.setReturnFormat(JSON)
-    return sparql.queryAndConvert()
+    sparql.setReturnFormat(RDF)
+    return sparql.query()._convertRDF()
 
 
-results = get_results(endpoint_url, query)
-print(results)
-g = rdflib.Graph()
-
-# result = g.parse(data=results.serialize(format='xml'), format="xml")
+# g = rdflib.Graph()
+g = ConjunctiveGraph()
+g = get_results(endpoint_url, query)
+# MG = URIRef('http://www.wikidata.org/entity/Q1001')
+# englishName = g.preferredLabel(MG)
+# print(englishName)
 
 # print out the entire Graph in the RDF Turtle format
-# print(g.serialize(format="turtle").decode("utf-8"))
+print(g.serialize(format="turtle").decode("utf-8"))
+# for s, p, o in g.triples((None,  None, None)):
+#     print("{} {} {}".format(s, p, o))
