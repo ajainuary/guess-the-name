@@ -1,12 +1,43 @@
+@prefix bd: <http://www.bigdata.com/rdf#> .
+@prefix bds: <http://www.bigdata.com/rdf/search#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix fn: <http://www.w3.org/2005/xpath-functions#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix gas: <http://www.bigdata.com/rdf/gas#> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix geof: <http://www.opengis.net/def/geosparql/function/> .
+@prefix hint: <http://www.bigdata.com/queryHints#> .
+@prefix mediawiki: <https://www.mediawiki.org/ontology#> .
+@prefix mwapi: <https://www.mediawiki.org/ontology#API/> .
+@prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix p: <http://www.wikidata.org/prop/> .
+@prefix pq: <http://www.wikidata.org/prop/qualifier/> .
+@prefix pqn: <http://www.wikidata.org/prop/qualifier/value-normalized/> .
+@prefix pqv: <http://www.wikidata.org/prop/qualifier/value/> .
+@prefix pr: <http://www.wikidata.org/prop/reference/> .
+@prefix prn: <http://www.wikidata.org/prop/reference/value-normalized/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix prv: <http://www.wikidata.org/prop/reference/value/> .
+@prefix ps: <http://www.wikidata.org/prop/statement/> .
+@prefix psn: <http://www.wikidata.org/prop/statement/value-normalized/> .
+@prefix psv: <http://www.wikidata.org/prop/statement/value/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix schema: <http://schema.org/> .
+@prefix sesame: <http://www.openrdf.org/schema/sesame#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix wd: <http://www.wikidata.org/entity/> .
+@prefix wdata: <http://www.wikidata.org/wiki/Special:EntityData/> .
+@prefix wdno: <http://www.wikidata.org/prop/novalue/> .
+@prefix wdref: <http://www.wikidata.org/reference/> .
 @prefix wds: <http://www.wikidata.org/entity/statement/> .
 @prefix wdt: <http://www.wikidata.org/prop/direct/> .
 @prefix wdtn: <http://www.wikidata.org/prop/direct-normalized/> .
+@prefix wdv: <http://www.wikidata.org/value/> .
 @prefix wikibase: <http://wikiba.se/ontology#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 wd:Q1001 rdfs:label "Mahatma Gandhi"@af,
@@ -215,7 +246,7 @@ wd:Q1001 rdfs:label "Mahatma Gandhi"@af,
         "圣雄甘地"@zh-my,
         "圣雄甘地"@zh-sg,
         "聖雄甘地"@zh-tw ;
-    schema:dateModified "2021-03-06T13:55:00+00:00"^^xsd:dateTime ;
+    schema:dateModified "2021-03-11T06:11:04+00:00"^^xsd:dateTime ;
     schema:description "Indiese politieke en godsdienstige leier"@af,
         "የህንድ የፓለቲካ እና የሃይማኖት መሪ"@am,
         "Indian political and religious leader"@ang,
@@ -314,11 +345,11 @@ wd:Q1001 rdfs:label "Mahatma Gandhi"@af,
         "印度民族主义运动和国大党领袖"@zh-hans,
         "印度政治和宗教領袖"@zh-hant,
         "他是印度民族主義運動和國大黨領袖，帶領印度邁向獨立，脫離英國殖民地統治。他的非暴力哲學思想影響了全世界的民族主義者和那些爭取和平變革的國際運動。"@zh-tw ;
-    schema:version 1376451331 ;
-    wikibase:identifiers 176 ;
+    schema:version 1379714900 ;
+    wikibase:identifiers 177 ;
     wikibase:sitelinks 251 ;
-    wikibase:statements 279 ;
-    wikibase:timestamp "2021-03-06T13:55:05+00:00"^^xsd:dateTime ;
+    wikibase:statements 280 ;
+    wikibase:timestamp "2021-03-11T06:11:32+00:00"^^xsd:dateTime ;
     skos:altLabel "Mahatma Mohandas Karamchand Gandhi"@ast,
         "Mohandas Gandhi"@ast,
         "महात्मा गाँधी"@bho,
@@ -724,6 +755,7 @@ wd:Q1001 rdfs:label "Mahatma Gandhi"@af,
     p:P8814 wds:Q1001-F0B4BCC2-5547-4696-B12E-961DAB3A353C ;
     p:P8849 wds:Q1001-8A66382E-95D2-479D-8822-AA93DDDB0516 ;
     p:P8851 wds:Q1001-ECD40D95-8096-46AC-B0E0-6C58BF006957 ;
+    p:P8902 wds:Q1001-25B8C961-2520-4154-8820-46A1E9BE9680 ;
     p:P8980 wds:Q1001-4A400076-79AB-4418-928D-D5A93C4CE2B9 ;
     p:P9037 wds:Q1001-452D0CE3-CFAB-4D15-9E4E-88B2BC1D02BC ;
     p:P906 wds:Q1001-6E48FDDC-D8B4-454D-BF5D-3BD8AE2B8A05 ;
@@ -1021,6 +1053,7 @@ wd:Q1001 rdfs:label "Mahatma Gandhi"@af,
     wdt:P8814 "11009335-n"^^xsd:string ;
     wdt:P8849 "3661669"^^xsd:string ;
     wdt:P8851 "2780263"^^xsd:string ;
+    wdt:P8902 "people/62377"^^xsd:string ;
     wdt:P8980 "000042518"^^xsd:string ;
     wdt:P9037 "4d3544db-c1d5-4403-9b50-1b3e636d9976"^^xsd:string ;
     wdt:P906 "275000"^^xsd:string ;
