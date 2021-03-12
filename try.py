@@ -1,13 +1,9 @@
-
 import rdflib, urllib
 from rdflib import URIRef
 import random
 
 def get_allnodes(g):
   entities = g.all_nodes()
-  # for entity in entities:
-  #   print(entity)
-
   return entities
 
 def compute_score(edges):
@@ -18,7 +14,7 @@ def classify_edges(g, edg):
   ## Given a graph and a list of edges this function classifies the edges into two category 
   ## 1. Existing: Edges that are present in extracted graph
   ## 2. New: Edges that are not present and could act as an edit 
-  
+
   edges = {}
   edges['existing'] = []
   edges['new'] = []
@@ -42,10 +38,19 @@ itemGraph=rdflib.Graph()
 endpointUrl = 'https://query.wikidata.org/sparql'
 query = '''
 CONSTRUCT {
-  wd:''' + item + ''' ?p1 ?o.
+  ?item ?predicate ?field.
+  ?item rdfs:label ?itemLabel.
+  ?property rdfs:label ?propertyLabel.
+  ?field rdfs:label ?fieldLabel.
 }
 WHERE {
-  wd:''' + item + ''' ?p1 ?o.
+  VALUES (?item) {(wd:Q1001)}
+  ?item ?predicate ?field.
+  ?item rdfs:label ?itemLabel. filter(lang(?itemLabel) = "hi").
+  ?property wikibase:directClaim ?predicate.
+  ?property rdfs:label ?propertyLabel.  filter(lang(?propertyLabel) = "hi").
+  ?field rdfs:label ?fieldLabel.  filter(lang(?fieldLabel) = "hi").
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "hi". }
 }
 '''
 
@@ -55,22 +60,33 @@ url = endpointUrl + '?query=' + urllib.parse.quote(query)
 result = itemGraph.parse(url)
 print('There are ', len(result), ' triples about item ', item)
 
-# retrieve label
-MG = URIRef('http://www.wikidata.org/entity/Q1001')
-Name = itemGraph.preferredLabel(MG, lang='hi')
-print('name: ', Name[0][1])
+for s,p,o in itemGraph.triples((None, None, None)):
+  sl = itemGraph.preferredLabel(URIRef(s), lang='hi')
+  if not sl:
+    sl = s
+  else:
+    sl = sl[0][1]
 
-#serialize the graph as Turtle and save it in a file
+  pl = itemGraph.preferredLabel(URIRef(s), lang='hi')
+  if not pl:
+    pl = p
+  else:
+    pl = pl[0][1]
+
+  ol = itemGraph.preferredLabel(URIRef(s), lang='hi')
+  if not ol:
+    ol = o
+  else:
+    ol = ol[0][1]
+
+  print('{} {} {}'.format(sl,pl,ol))
+
+# #serialize the graph as Turtle and save it in a file
 r = itemGraph.serialize(destination='rdflibOutput.ttl', format='turtle')
-# print(itemGraph.serialize(format="turtle"))
+# # print(itemGraph.serialize(format="turtle"))
 
-# for s, p, o in itemGraph.triples((None, None, None)):
-#   print('{} {} {}'.format(s,p,o))
-
-# retrieve all nodes in the graph
 nodes = get_allnodes(itemGraph)
-
-edges = []
+# edges = []
 
 # for s, p, o in itemGraph.triples((None, None, None)):
 #     if type(o) is rdflib.term.URIRef:
@@ -92,7 +108,6 @@ edges = [{'p': rdflib.term.URIRef('http://www.w3.org/2004/02/skos/core#altLabel'
 {'p': rdflib.term.URIRef('http://schema.org/description'), 'o': rdflib.term.Literal('American political leader', lang='en-ca'), 's': rdflib.term.URIRef('http://www.wikidata.org/entity/Q1001')}, 
 {'p': rdflib.term.URIRef('http://www.wikidata.org/prop/direct/P2635'), 'o': rdflib.term.Literal('5237e24523334846ac1e310fb935f6ee', datatype=rdflib.term.URIRef('http://www.w3.org/2001/XMLSchema#string')), 's': rdflib.term.URIRef('http://www.wikidata.org/entity/Q1001')}, 
 {'p': rdflib.term.URIRef('http://www.w3.org/2000/01/rdf-schema#label'), 'o': rdflib.term.Literal('Mahatma Gandhi', lang='lfn'), 's': rdflib.term.URIRef('http://www.wikidata.org/entity/Q1001')}]
-
 
 edges = classify_edges(itemGraph, edges)
 print('Existing: ' + str(len(edges['existing'])))
