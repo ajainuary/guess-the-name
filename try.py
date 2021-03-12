@@ -15,6 +15,10 @@ def compute_score(edges):
   return score
 
 def classify_edges(g, edg):
+  ## Given a graph and a list of edges this function classifies the edges into two category 
+  ## 1. Existing: Edges that are present in extracted graph
+  ## 2. New: Edges that are not present and could act as an edit 
+  
   edges = {}
   edges['existing'] = []
   edges['new'] = []
@@ -50,6 +54,8 @@ url = endpointUrl + '?query=' + urllib.parse.quote(query)
 # rdflib retrieves the results, parses the triples, and adds them to the graph
 result = itemGraph.parse(url)
 print('There are ', len(result), ' triples about item ', item)
+
+# retrieve label
 MG = URIRef('http://www.wikidata.org/entity/Q1001')
 Name = itemGraph.preferredLabel(MG, lang='hi')
 print('name: ', Name[0][1])
@@ -58,14 +64,12 @@ print('name: ', Name[0][1])
 r = itemGraph.serialize(destination='rdflibOutput.ttl', format='turtle')
 # print(itemGraph.serialize(format="turtle"))
 
-# count = 0
 # for s, p, o in itemGraph.triples((None, None, None)):
 #   print('{} {} {}'.format(s,p,o))
-#   count += 1
-#   if count > 5:
-#     break
 
+# retrieve all nodes in the graph
 nodes = get_allnodes(itemGraph)
+
 edges = []
 
 # for s, p, o in itemGraph.triples((None, None, None)):
@@ -82,14 +86,17 @@ edges = []
 #       edge['o'] = o
 #       edges.append(edge)
 
+# Dummy user input
 edges = [{'p': rdflib.term.URIRef('http://www.w3.org/2004/02/skos/core#altLabel'), 'o': rdflib.term.Literal('マハトマ・ガンディ', lang='ja'), 's': rdflib.term.URIRef('http://www.wikidata.org/entity/Q1001')},
 {'p': rdflib.term.URIRef('http://www.wikidata.org/prop/direct/P4180'), 'o': rdflib.term.Literal('32', datatype=rdflib.term.URIRef('http://www.w3.org/2001/XMLSchema#string')), 's': rdflib.term.URIRef('http://www.wikidata.org/entity/Q1001')}, 
 {'p': rdflib.term.URIRef('http://schema.org/description'), 'o': rdflib.term.Literal('American political leader', lang='en-ca'), 's': rdflib.term.URIRef('http://www.wikidata.org/entity/Q1001')}, 
 {'p': rdflib.term.URIRef('http://www.wikidata.org/prop/direct/P2635'), 'o': rdflib.term.Literal('5237e24523334846ac1e310fb935f6ee', datatype=rdflib.term.URIRef('http://www.w3.org/2001/XMLSchema#string')), 's': rdflib.term.URIRef('http://www.wikidata.org/entity/Q1001')}, 
 {'p': rdflib.term.URIRef('http://www.w3.org/2000/01/rdf-schema#label'), 'o': rdflib.term.Literal('Mahatma Gandhi', lang='lfn'), 's': rdflib.term.URIRef('http://www.wikidata.org/entity/Q1001')}]
 
+
 edges = classify_edges(itemGraph, edges)
 print('Existing: ' + str(len(edges['existing'])))
 print('New: ' + str(len(edges['new'])))
+
 score = compute_score(edges)
 print('Score: ' + str(score))
