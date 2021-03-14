@@ -4,7 +4,6 @@ import rdflib
 import urllib
 from rdflib import URIRef
 import random
-from wrapper import Graph, Entity
 
 
 def get_allnodes(g):
@@ -130,14 +129,3 @@ print('Score: ' + str(score))
 for x in itemGraph.predicate_objects():
     print(x)
 print(itemGraph.toPython())
-
-g = Graph(itemGraph)
-ans = g.nodes()
-for x in ans:
-    print(x.qid, x.label)
-    props = x.properties()
-    for y in props:
-        print(y, x.object(y))
-    if x.qid == "Q1001":
-        x.add("P31", "dead person")
-        print(x.object("P31"))

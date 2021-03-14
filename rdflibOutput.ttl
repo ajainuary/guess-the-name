@@ -1,1074 +1,186 @@
-@prefix bd: <http://www.bigdata.com/rdf#> .
-@prefix bds: <http://www.bigdata.com/rdf/search#> .
-@prefix dc: <http://purl.org/dc/elements/1.1/> .
-@prefix dct: <http://purl.org/dc/terms/> .
-@prefix fn: <http://www.w3.org/2005/xpath-functions#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix gas: <http://www.bigdata.com/rdf/gas#> .
-@prefix geo: <http://www.opengis.net/ont/geosparql#> .
-@prefix geof: <http://www.opengis.net/def/geosparql/function/> .
-@prefix hint: <http://www.bigdata.com/queryHints#> .
-@prefix mediawiki: <https://www.mediawiki.org/ontology#> .
-@prefix mwapi: <https://www.mediawiki.org/ontology#API/> .
-@prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix p: <http://www.wikidata.org/prop/> .
-@prefix pq: <http://www.wikidata.org/prop/qualifier/> .
-@prefix pqn: <http://www.wikidata.org/prop/qualifier/value-normalized/> .
-@prefix pqv: <http://www.wikidata.org/prop/qualifier/value/> .
-@prefix pr: <http://www.wikidata.org/prop/reference/> .
-@prefix prn: <http://www.wikidata.org/prop/reference/value-normalized/> .
-@prefix prov: <http://www.w3.org/ns/prov#> .
-@prefix prv: <http://www.wikidata.org/prop/reference/value/> .
-@prefix ps: <http://www.wikidata.org/prop/statement/> .
-@prefix psn: <http://www.wikidata.org/prop/statement/value-normalized/> .
-@prefix psv: <http://www.wikidata.org/prop/statement/value/> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix schema: <http://schema.org/> .
-@prefix sesame: <http://www.openrdf.org/schema/sesame#> .
-@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix wd: <http://www.wikidata.org/entity/> .
-@prefix wdata: <http://www.wikidata.org/wiki/Special:EntityData/> .
-@prefix wdno: <http://www.wikidata.org/prop/novalue/> .
-@prefix wdref: <http://www.wikidata.org/reference/> .
-@prefix wds: <http://www.wikidata.org/entity/statement/> .
 @prefix wdt: <http://www.wikidata.org/prop/direct/> .
-@prefix wdtn: <http://www.wikidata.org/prop/direct-normalized/> .
-@prefix wdv: <http://www.wikidata.org/value/> .
-@prefix wikibase: <http://wikiba.se/ontology#> .
-@prefix xml: <http://www.w3.org/XML/1998/namespace> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-wd:Q1001 rdfs:label "Mahatma Gandhi"@af,
-        "Mahatma Gandi"@ak,
-        "ማህተማ ጋንዲ"@am,
-        "Mohandas Karamchand Gandhi"@an,
-        "Mohandas Karamchand Gandhi"@ang,
-        "مهاتما غاندي"@ar,
-        "لماهاطما ڭاندي"@ary,
-        "مهاتما جاندى"@arz,
-        "মোহনদাস কৰমচান্দ গান্ধী"@as,
-        "Mahatma Gandhi"@ast,
-        "Mahatma Gandhi"@avk,
-        "महात्मा गाँधी"@awa,
-        "Mahatma Gandhi"@ay,
-        "Mahatma Qandi"@az,
-        "ماهاتما گاندی"@azb,
-        "Махатма Ганди"@ba,
-        "Mahatma Gandhi"@ban,
-        "Mahatma Gandhi"@bar,
-        "Mohandas Karamchand Gandhi"@bcl,
-        "Махатма Гандзі"@be,
-        "Магатма Гандзі"@be-tarask,
-        "Махатма Ганди"@bg,
-        "महात्मा गान्धी"@bho,
-        "মোহনদাস করমচাঁদ গান্ধী"@bn,
-        "মহাত্মা গান্ধী"@bpy,
-        "Mahatma Gandhi"@br,
-        "Mahátmá Gándí"@brh,
-        "Mohandas Gandhi"@bs,
-        "Махатма Ганди"@bxr,
-        "Mohandas Gandhi"@ca,
-        "Махатма Ганди"@ce,
-        "Mahatma Gandhi"@ceb,
-        "مەھاتما گاندی"@ckb,
-        "Mahatma Gandhi"@co,
-        "Mahátma Gándhí"@cs,
-        "Махатма Ганди"@cv,
-        "Mahatma Gandhi"@cy,
-        "Mahatma Gandhi"@da,
-        "Mohandas Karamchand Gandhi"@de,
-        "Mahatma Gandhi"@de-at,
-        "Mohandas Karamchand Gandhi"@de-ch,
-        "Mahatma Gandi"@diq,
-        "Mahatma Gandhi"@dsb,
-        "महात्मा गान्धी"@dty,
-        "މަހާއްތްމާ ގާންދީހ"@dv,
-        "Μαχάτμα Γκάντι"@el,
-        "Mahatma Gandhi"@en,
-        "Mohandas Karamchand Gandhi"@en-ca,
-        "Mohandas Karamchand Gandhi"@en-gb,
-        "Mohandas Karamchand Gandhi"@eo,
-        "Mahatma Gandhi"@es,
-        "Mahatma Gandhi"@et,
-        "Mohandas Karamchand Gandhi"@eu,
-        "Mahatma Gandhi"@ext,
-        "ماهاتما گاندی"@fa,
-        "Mahatma Gandhi"@fi,
-        "Mahatma Gandhi"@fo,
-        "Mahatma Gandhi"@fr,
-        "Mohandas Karamchand Gandhi"@frp,
-        "Mahatma Gandhi"@fy,
-        "Mahatma Gandhi"@ga,
-        "甘地"@gan,
-        "Mohandas Karamchand Gandhi"@gcr,
-        "Mahatma Gandhi"@gd,
-        "Mahatma Gandhi"@gl,
-        "महात्मा गांधी"@gom,
-        "महात्मा गांधी"@gom-deva,
-        "Mahatma Gandhi"@gom-latn,
-        "Mohandas Karamchand Gandhi"@gsw,
-        "મહાત્મા ગાંધી"@gu,
-        "Mahatma Gandhi"@ha,
-        "מוהנדס קרמצ'נד גנדי"@he,
-        "महात्मा गांधी"@hi,
-        "Mohandas Karamchand Gandhi"@hif,
-        "Mahatma Gandhi"@hr,
-        "Mohandas Karamchand Gandhi"@ht,
-        "Mohandász Karamcsand Gandhi"@hu,
-        "Մահաթմա Գանդի"@hy,
-        "Մահաթմա Կանտի"@hyw,
-        "Mahatma Gandhi"@ia,
-        "Mahatma Gandhi"@id,
-        "Mahatma Gandhi"@ilo,
-        "Mahatma Gandhi"@io,
-        "Mohandas Gandhi"@is,
-        "Mahatma Gandhi"@it,
-        "マハトマ・ガンディー"@ja,
-        "Mohandas Karamchand Gandhi"@jam,
-        "mohandas.karamtcand.gandis"@jbo,
-        "Mohandas Gandhi"@jv,
-        "მაჰათმა განდი"@ka,
-        "Mohandas Gandhi"@kab,
-        "Махатма Ганди"@kbd,
-        "Gandhi"@kbp,
-        "Махатма Ганди"@kk,
-        "មហាត្មះគន្ធី"@km,
-        "ಮಹಾತ್ಮ ಗಾಂಧಿ"@kn,
-        "마하트마 간디"@ko,
-        "महात्मा गांधी"@ks,
-        "Mahatma Gandî"@ku,
-        "Mahatma Gandhi"@kw,
-        "Махатма Ганди"@ky,
-        "Mahatma Gandhi"@la,
-        "Mohandas Gandhi"@lad,
-        "Mohandas Karamchand Gandhi"@lb,
-        "Магьатма Ганди"@lez,
-        "Mahatma Gandhi"@lfn,
-        "Mahatma Gandhi"@li,
-        "Mahatma Gandhi"@lmo,
-        "Mohandas Gandhi"@ln,
-        "ມະຫາຕະມາ ຄານທີ"@lo,
-        "موھاتما گاندی"@lrc,
-        "Mohandas Gandhi"@lt,
-        "Mohandass Karamčands Gandijs"@lv,
-        "甘地"@lzh,
-        "महात्मा गान्धी"@mai,
-        "Mohandas Karamchand Gandhi"@mg,
-        "Мохандас Ганди"@mhr,
-        "Mahatma Gandhi"@min,
-        "Махатма Ганди"@mk,
-        "മഹാത്മാ ഗാന്ധി"@ml,
-        "Махатма Ганди"@mn,
-        "မဟာတ္တမ ဂါန္ဒဳ"@mnw,
-        "महात्मा गांधी"@mr,
-        "Mohandas Karamchand Gandhi"@ms,
-        "Mahatma Gandhi"@mt,
-        "မဟတ္တမ ဂန္ဒီ"@my,
-        "ماهاتما گاندی"@mzn,
-        "Gân-tì"@nan,
-        "Mahatma Gandhi"@nb,
-        "Mohandas Karamchand Gandhi"@nds,
-        "महात्मा गान्धी"@ne,
-        "महात्मा गान्धी"@new,
-        "Mahatma Gandhi"@nl,
-        "Mahatma Gandhi"@nn,
-        "ߡߏ߬ߤߊ߲ߘߊߛ ߞߊ߬ߙߊ߲ߡߑߛ߭ߊ߲ߘ ߜ߭ߊ߲ߘߌ߫"@nqo,
-        "Mohandas Karamchand Gandhi"@oc,
-        "Mahatma Gandhi"@olo,
-        "ମୋହନଦାସ କରମଚାନ୍ଦ ଗାନ୍ଧୀ"@or,
-        "ਮੋਹਨਦਾਸ ਕਰਮਚੰਦ ਗਾਂਧੀ"@pa,
-        "Mahatma Gandhi"@pcd,
-        "Mahatma Gandhi"@pl,
-        "Mahatma Gandhi"@pms,
-        "گاندھی"@pnb,
-        "مهاتما ګاندي"@ps,
-        "Mahatma Gandhi"@pt,
-        "Mahatma Gandhi"@pt-br,
-        "Mohandas Gandhi"@qu,
-        "Mahatma Gandhi"@rmy,
-        "Mahatma Gandhi"@ro,
-        "Махатма Ганди"@ru,
-        "Магатма Ґанді"@rue,
-        "महात्मा गान्धिः"@sa,
-        "Моhандас Карамчанд Ганди"@sah,
-        "ᱢᱚᱦᱟᱛᱢᱟ ᱜᱟᱱᱫᱷᱤ"@sat,
-        "Mohandas Karamchand Gandhi"@sc,
-        "Mahatma Gandhi"@scn,
-        "Mohandas Karamchand Gandhi"@sco,
-        "موهنداس ڪرمچند گانڌي"@sd,
-        "Muohands Gandi"@sgs,
-        "Mahatma Gandhi"@sh,
-        "මහත්මා ගාන්ධි"@si,
-        "Móhandás Karamčand Gándhí"@sk,
-        "Mahatma Gandhi"@sl,
-        "Mahatma Gandhi"@so,
-        "Mahatma Gandi"@sq,
-        "Махатма Ганди"@sr,
-        "Mahatma Gandhi"@ss,
-        "Mohandas Gandhi"@su,
-        "Mahatma Gandhi"@sv,
-        "Mohandas Karamchand Gandhi"@sw,
-        "மோகன்தாசு கரம்சந்த் காந்தி"@ta,
-        "ಮಹಾತ್ಮ ಗಾಂಧಿ"@tcy,
-        "మహాత్మా గాంధీ"@te,
-        "Маҳатма Ганди"@tg,
-        "มหาตมา คานธี"@th,
-        "Mahatma Gandi"@tk,
-        "Mahatma Gandhi"@tl,
-        "Gandi"@tpi,
-        "Mohandas Karamçand Gandi"@tr,
-        "Mahatma Gandhi"@ts,
-        "Махатма Ганди"@tt,
-        "Махатма Ганди"@tyv,
-        "ماھاتما گەندى"@ug,
-        "Магатма Ґанді"@uk,
-        "موہن داس گاندھی"@ur,
-        "Gandi Moxandas Karamchand"@uz,
-        "Mahatma Gandhi"@vec,
-        "Mahatma Gandi"@vep,
-        "Mahatma Gandhi"@vi,
-        "Gandhi Mahatma"@vro,
-        "Mohandas Karamchand Gandhi"@war,
-        "甘地"@wuu,
-        "Ганди, Мохандас Карамчанд"@xal,
-        "მაჰათმა განდი"@xmf,
-        "מאהענדאס קערעמטשענד גאנדי"@yi,
-        "Mohandas Karamchand Gandhi"@yo,
-        "甘地"@yue,
-        "莫罕達斯·卡拉姆昌德·甘地"@zh,
-        "莫罕達斯·卡拉姆昌德·甘地"@zh-cn,
-        "圣雄甘地"@zh-hans,
-        "聖雄甘地"@zh-hant,
-        "聖雄甘地"@zh-hk,
-        "聖雄甘地"@zh-mo,
-        "圣雄甘地"@zh-my,
-        "圣雄甘地"@zh-sg,
-        "聖雄甘地"@zh-tw ;
-    schema:dateModified "2021-03-11T06:11:04+00:00"^^xsd:dateTime ;
-    schema:description "Indiese politieke en godsdienstige leier"@af,
-        "የህንድ የፓለቲካ እና የሃይማኖት መሪ"@am,
-        "Indian political and religious leader"@ang,
-        "الزعيم السياسي والديني الهندي"@ar,
-        "الزعيم السياسي والديني الهندي"@arz,
-        "ভাৰতৰ স্বাধীনতা আন্দোলনৰ এজন মুখ্য পথপ্ৰদৰ্শক নেতা"@as,
-        "líder políticu y relixosu de la India (1869-1948)"@ast,
-        "Indischa politischa und religiösa Führa"@bar,
-        "Індыйскі палітычны і рэлігійны лідэр"@be,
-        "Индийски политически и религиозен лидер"@bg,
-        "भारतीय नेता"@bho,
-        "ব্রিটিশ শাসন আমলে ভারতীয় জাতীয়তাবাদী আন্দোলনের প্রধান নেতা"@bn,
-        "Indijski politički i verski lider"@bs,
-        "líder polític i religiós indi"@ca,
-        "capu puliticu puliticu indianu"@co,
-        "indický politik"@cs,
-        "arweinydd gwleidyddol a chrefyddol Indiaidd"@cy,
-        "Indisk politisk og religiøs leder (1869-1948)"@da,
-        "Indischer politischer und religiöser Führer und Rechtsanwalt"@de,
-        "Indischer politischer und religiöser Führer"@de-at,
-        "Indischer politischer und religiöser Führer"@de-ch,
-        "Ινδός πολιτικός και θρησκευτικός ηγέτης"@el,
-        "pre-eminent leader of Indian nationalism during the British Raj (1869-1948)"@en,
-        "Indian political and religious leader"@en-ca,
-        "Indian political and religious leader"@en-gb,
-        "barata filozofo, politikisto (1869-1948)"@eo,
-        "líder político e insurgente indio"@es,
-        "India poliitiline ja religioosne liider"@et,
-        "Indiaren independentziako ekintzaile eta buruzagia"@eu,
-        "رهبر سیاسی و مذهبی هند رهبر کارزار آزادکردن هند از حکومت بریتانیا"@fa,
-        "Intian itsenäisyysliikkeen johtaja"@fi,
-        "leader politique et religieux indien"@fr,
-        "ceannaire polaitiúil agus reiligiúnach Indiach"@ga,
-        "avogado, pensador e político indio"@gl,
-        "Indischer politischer und religiöser Führer"@gsw,
-        "જગપ્રસિદ્ધ ભારતીય રાષ્ટ્રવાદી નેતા"@gu,
-        "מנהיג פוליטי ורוחני הודי"@he,
-        "भारतीय स्वतंत्रता आंदोलन के प्रमुख प्रणेता"@hi,
-        "भारतीय राजनीतिक और धार्मिक नेता"@hif,
-        "Indijski politički i vjerski vođa"@hr,
-        "Ameriken lidè politik ak relijye"@ht,
-        "indiai politikai, spirituális vezető"@hu,
-        "Հնդկական քաղաքական եւ կրոնական առաջնորդը"@hy,
-        "seoang politikus India | Aktivis dan pejuang HAM-Perdamaian asal India"@id,
-        "preeminente a daulo ti Indiano a nationalismo idi las-ud ti Britaniko a panagturay ti India"@ilo,
-        "politico, filosofo e avvocato indiano"@it,
-        "インドの政治指導者"@ja,
-        "pimpinan politik lan agama India"@jv,
-        "ინდური პოლიტიკური და რელიგიური ლიდერი"@ka,
-        "Үнді саяси және діни көшбасшы"@kk,
-        "ಭಾರತೀಯ ಸ್ವಾತಂತ್ರ್ಯ ಹೋರಾಟದ ಶ್ರೇಷ್ಠ ನಾಯಕ ಹಾಗೂ ಧೀಮಂತ ನಾಯಕ ಸ್ವರಾಜ್ಯ"@kn,
-        "인도의 독립운동가 겸 법률가, 정치인"@ko,
-        "Rêberê siyasî û olî ya Hindistanê"@ku,
-        "Индиялык саясий жана диний лидери"@ky,
-        "politica et religionis Dux Indian"@la,
-        "Indeschen politeschen a reliéise Leader"@lb,
-        "ຜູ້ນໍາດ້ານການເມືອງແລະສາສະຫນາຂອງອິນເດຍ"@lo,
-        "Indijos politinis ir religinis lyderis"@lt,
-        "Indijas politiskā un reliģiskā vadītāja"@lv,
-        "印度政治和宗教領袖"@lzh,
-        "индиски општественик"@mk,
-        "ഇന്ത്യയുടെ \"രാഷ്ട്രപിതാവ്\".ഇന്ത്യൻ സ്വാതന്ത്ര്യസമര പ്രസ്ഥാനത്തിന്റെ നേതാവും വഴികാട്ടിയും."@ml,
-        "энэтхэгийн улс төр, шашны удирдагч"@mn,
-        "भारतीय स्वातंत्र्यलढयातील अग्रणी नेते"@mr,
-        "indisk frigjøringsleder og statsmann"@nb,
-        "भारतमा बेलायती शासनको बिरूद्धको स्वतन्त्रता सङ्ग्रामका अग्रणी भारतीय राष्ट्रवादी नेता"@ne,
-        "Indiaas politicus (1869-1948)"@nl,
-        "ߌ߲ߘߌ߫ ߢߍߟߊ߫ ߞߎ߲߬ߕߌ߰ ߞߘߐߕߊ߬ߣߍ߲ ߘߏ߫߸ ߓߙߌߕߊ߲ߓߊ߫ ߟߊ߫ ߡߙߊ߬ߟߌ ߕߎ߬ߡߊ ߟߊ߫."@nqo,
-        "ଭାରତୀୟ ସ୍ୱାଧୀନତା ସଂଗ୍ରାମୀ"@or,
-        "ਬ੍ਰਿਟਿਸ਼-ਰਾਜ ਦੌਰਾਨ ਭਾਰਤੀ ਰਾਸ਼ਟਰਵਾਦ ਦੇ ਪ੍ਰਸਿੱਧ ਨੇਤਾ"@pa,
-        "Indyjski przywódca polityczny i religijny"@pl,
-        "líder político e religioso indiano (1869-1948)"@pt,
-        "líder político e religioso indiano"@pt-br,
-        "taripay amachaq wan pulitiku"@qu,
-        "lider politic și religios indian"@ro,
-        "один из руководителей и идеологов движения за независимость Индии от Великобритании"@ru,
-        "ᱥᱤᱧᱚᱛ ᱯᱷᱩᱨᱜᱟᱹᱞ ᱞᱟᱲᱟᱣᱱᱟ ᱨᱮᱱ ᱢᱤᱫᱴᱮᱱ ᱢᱟᱨᱟᱝ ᱰᱟᱦᱟᱨ ᱩᱫᱩᱜ ᱟᱹᱭᱩᱨᱤᱭᱟᱹ"@sat,
-        "ceannard poilitigeach agus cràbhach nan Innseachan"@sco,
-        "ඉන්දීය නිදහස් සටනේ පෙරගමන් කරුවෙක්"@si,
-        "indický mysliteľ a politik"@sk,
-        "Indijski politični in verski vodja"@sl,
-        "hogaamiye siyaasadeed iyo diineed ee India"@so,
-        "udhëheqësi politik dhe fetar indian"@sq,
-        "Индијски политички и верски лидер"@sr,
-        "indisk politiker och andlig ledare"@sv,
-        "பிரிட்டிஷ் ராஜ் காலத்தில்இந்திய விடுதலைப் போராட்ட வீரர் (1869-1948)"@ta,
-        "భారతదేశ జాతిపిత, స్వాతంత్ర్య సమర యోధులు."@te,
-        "ผู้นำทางการเมืองและศาสนาอินเดีย"@th,
-        "Hint siyasetçi ve dini lider"@tr,
-        "один з керівників та ідеологів руху за незалежність Індії від Великої Британії"@uk,
-        "ہندوستانی تحریک آزادی کے رہنما، سیاست دان، فعالیت پسند، وکیل، مصنف"@ur,
-        "Hindistonning siyosiy va diniy rahbari"@uz,
-        "nhà lãnh đạo chính trị và tôn giáo Ấn Độ"@vi,
-        "印度政治和宗教領袖"@zh,
-        "印度政治和宗教領袖"@zh-cn,
-        "印度民族主义运动和国大党领袖"@zh-hans,
-        "印度政治和宗教領袖"@zh-hant,
-        "他是印度民族主義運動和國大黨領袖，帶領印度邁向獨立，脫離英國殖民地統治。他的非暴力哲學思想影響了全世界的民族主義者和那些爭取和平變革的國際運動。"@zh-tw ;
-    schema:version 1379714900 ;
-    wikibase:identifiers 177 ;
-    wikibase:sitelinks 251 ;
-    wikibase:statements 280 ;
-    wikibase:timestamp "2021-03-11T06:11:32+00:00"^^xsd:dateTime ;
-    skos:altLabel "Mahatma Mohandas Karamchand Gandhi"@ast,
-        "Mohandas Gandhi"@ast,
-        "महात्मा गाँधी"@bho,
-        "मोहनदास करमचंद गांधी"@bho,
-        "মহাত্মা গান্ধী"@bn,
-        "Mahatma Gandhi"@cs,
-        "Mohandás Karamchand Gándhí"@cs,
-        "Móhandás Karamčand Gándhí"@cs,
-        "Gandhi"@de,
-        "Mahatma Gandhi"@de,
-        "Mohandas Gandhi"@de,
-        "Bapu"@en,
-        "Bapuji"@en,
-        "Gandhi"@en,
-        "Gandhiji"@en,
-        "Gandhji"@en,
-        "M K Gandhi"@en,
-        "M. K. Gandhi"@en,
-        "Mahatma Mohandas Karamchand Gandhi"@en,
-        "Mohandas Gandhi"@en,
-        "Mohandas K Gandhi"@en,
-        "Mohandas K. Gandhi"@en,
-        "Mohandas Karamchand Gandhi"@en,
-        "Mahatmo Gandhio"@eo,
-        "Gandhi"@es,
-        "Mohandas Karamchand Gandhi"@es,
-        "Mohandas Gandhi"@eu,
-        "مهانداس کارامچاند گاندی"@fa,
-        "Gandhi"@fr,
-        "Mohandas Karamchand Gandhi"@fr,
-        "Mohandas Karamchand Gandhi"@gl,
-        "मोहनदास करमचंद गांधी"@gom-deva,
-        "Mohandas Karamchand Gandhi"@gom-latn,
-        "ગાંધી"@gu,
-        "ગાંધીજી"@gu,
-        "બાપુ"@gu,
-        "મોહનદાસ કરમચંદ ગાંધી"@gu,
-        "גאנדי, מ.ק"@he,
-        "गांधी"@hi,
-        "गांधीजी"@hi,
-        "बापू"@hi,
-        "भारत के राष्ट्रपिता"@hi,
-        "महात्मा गांधी"@hi,
-        "मोहनदास करमचंद गांधी"@hi,
-        "मोहनदास गांधी"@hi,
-        "Mahátma Gandhi"@hu,
-        "Bapu"@id,
-        "Gandhi"@id,
-        "Gandhiji"@id,
-        "Kānti, Mōkan̲tās Karamcant,"@id,
-        "M K Gandhi"@id,
-        "Mohandas Gandhi"@id,
-        "Mohandas K. Gandhi"@id,
-        "Mohandas Karamchand Gandhi"@id,
-        "Gandhi"@ilo,
-        "Mohandas Karamchand Gandhi"@ilo,
-        "Mohandas Karamchand Gandhi"@it,
-        "ガンジー"@ja,
-        "ガンディ"@ja,
-        "ガンディー"@ja,
-        "ガーンディー"@ja,
-        "マハトマ・ガンジー"@ja,
-        "マハトマ・ガンディ"@ja,
-        "マハトマ・ガーンディー"@ja,
-        "マハートマー・ガーンディー"@ja,
-        "モハンダス・カラムチャンド・ガンジー"@ja,
-        "モハンダス・カラムチャンド・ガンディー"@ja,
-        "モハンダス・カラムチャンド・ガーンディー"@ja,
-        "モハンダス・ガンジー"@ja,
-        "モハンダス・ガンディー"@ja,
-        "モハンダス・ガーンディー"@ja,
-        "Мохандас Карамчанд Ганди"@kk,
-        "ಗಾಂಧೀಜಿ"@kn,
-        "ಬಾಪು,"@kn,
-        "간디"@ko,
-        "모한다스 카람찬드 간디"@ko,
-        "Mahatma Gandhi"@lb,
-        "Bapu"@lo,
-        "Mahatma Gandhi"@lo,
-        "Bapu"@loz,
-        "Bapu"@lt,
-        "Ghāndī, Mūhāndās Karamshānd,"@lt,
-        "Bapu"@lv,
-        "ഗാന്ധി"@ml,
-        "ഗാന്ധിജി"@ml,
-        "ബാപ്പു"@ml,
-        "ബാപ്പുജി"@ml,
-        "മോഹൻദാസ് കരംചന്ദ് ഗാന്ധി"@ml,
-        "മോഹൻദാസ് ഗാന്ധി"@ml,
-        "गांधी"@mr,
-        "गांधीजी"@mr,
-        "बापू"@mr,
-        "बापूजी"@mr,
-        "भारताचे राष्ट्रपिता"@mr,
-        "मोहनदास करमचंद गांधी"@mr,
-        "राष्ट्रपिता महात्मा गांधी"@mr,
-        "Gandhi"@nan,
-        "Mahatma Gandhi"@nan,
-        "Mohandas Gandhi"@nan,
-        "Gandhi"@nb,
-        "Mohandas Karamchand Gandhi"@nb,
-        "Mohandas Karamchand Gandhi"@nl,
-        "Mohandas Karamchand Gandhi"@nn,
-        "ߓߊߔߎ߫"@nqo,
-        "ߜ߭ߊ߲ߘߌ߫"@nqo,
-        "ߡ ߞ ߜ߭ߊ߲ߘߌ߫"@nqo,
-        "ߡߊ߬ߤߊߕߑߡߊ߬ ߜ߭ߊ߲ߘߌ߫"@nqo,
-        "ߡߊ߬ߤߊߕߑߡߊ߬ ߡߏ߬ߤߊ߲ߘߊߛ ߞߊ߬ߙߊ߲ߡߑߛ߭ߊ߲ߘ"@nqo,
-        "ߡߏ߬ߤߊ߲ߘߊߛ ߜ߭ߊ߲ߘߌ߫"@nqo,
-        "ߡߏ߬ߤߊ߲ߘߊߛ ߞ ߜ߭ߊ߲ߘߌ߫"@nqo,
-        "ଗାନ୍ଧୀ"@or,
-        "ଗାନ୍ଧୀଜୀ"@or,
-        "ବାପୁ"@or,
-        "ଭାରତର ରାଷ୍ଟ୍ରପିତା"@or,
-        "ମହାତ୍ମା ଗାନ୍ଧୀ"@or,
-        "ମୋହନଦାସ ଗାନ୍ଧୀ"@or,
-        "ਗਾਂਧੀ"@pa,
-        "ਮਹਾਤਮਾ ਗਾਂਧੀ"@pa,
-        "Gandhi"@pt-br,
-        "Mahatma Gandhi"@qu,
-        "Ганди, Махатма"@ru,
-        "Ганди, Мохандас"@ru,
-        "Ганди, Мохандас Карамчанд"@ru,
-        "Мохандас «Махатма» Ганди"@ru,
-        "Мохандас Ганди"@ru,
-        "Мохандас Карамчанд «Махатма» Ганди"@ru,
-        "Мохандас Карамчанд Ганди"@ru,
-        "ᱜᱟᱱᱫᱷᱤ"@sat,
-        "ᱜᱟᱱᱫᱷᱤᱡᱤ"@sat,
-        "ᱢᱚᱦᱟᱛᱟ ᱢᱚᱦᱚᱱᱫᱟᱥ ᱠᱚᱨᱚᱢᱪᱟᱸᱫᱽ ᱜᱟᱱᱫᱷᱤ"@sat,
-        "ᱵᱟᱯᱩ"@sat,
-        "ᱵᱟᱯᱩᱡᱤ"@sat,
-        "காந்தி தாத்தா தேசத் தந்தை பாபு பாபுஜி"@ta,
-        "గాంధీ"@te,
-        "గాంధీజి"@te,
-        "బాపు"@te,
-        "మోహన్దాస్ కరంచంద్ గాంధీ"@te,
-        "మోహన్దాస్ గాంధీ"@te,
-        "Магатма Ганді"@uk,
-        "Могандас Карамчанд Ганді"@uk,
-        "مہاتما گاندھی"@ur,
-        "گاندھی"@ur,
-        "圣雄甘地"@zh ;
-    p:P1005 wds:Q1001-B585E5C6-AA60-45BF-81C1-4CC938E47D15 ;
-    p:P1006 wds:Q1001-523AB86A-C03A-46E3-BB0D-FB7FA0E514B2,
-        wds:Q1001-7EF6033B-5527-48F5-8290-49AC832BA753 ;
-    p:P101 wds:Q1001-2dad4b82-f09d-41f2-897a-3ff5de879fdf,
-        wds:Q1001-af404f15-4ab3-2046-fc5a-4a8d81f38f60 ;
-    p:P1015 wds:Q1001-505978B4-CC1F-4E8A-AEF9-4FD08C0CE41B ;
-    p:P1017 wds:Q1001-89D9A8CD-7703-422A-BF02-40BA08977BA2 ;
-    p:P102 wds:Q1001-4905D256-083E-4971-9C16-06BE91EFF31C ;
-    p:P103 wds:q1001-0E583614-E883-43A4-A75F-AC1DD87D7C48 ;
-    p:P106 wds:Q1001-0167a855-436a-8253-161e-0c8a21ccb7aa,
-        wds:Q1001-113E4A0E-88E8-4CB5-903C-140E5AA4FC4F,
-        wds:Q1001-1c52abf2-474c-bf6e-63e0-13a418d6201a,
-        wds:Q1001-28D02C53-714F-4426-B21C-215EFB80E4A0,
-        wds:Q1001-3ce8a67a-4ec7-a39d-e05c-e8cec4c3001c,
-        wds:Q1001-3e7d96ef-4547-f8ab-f5f6-dbe0f0ba3c08,
-        wds:Q1001-4ec948a7-46b1-7995-6291-9000903a4557,
-        wds:Q1001-75508E5D-18CB-4EEE-ACD0-52B4BED29525,
-        wds:Q1001-84345c9b-4a33-9109-2564-f890f3422998,
-        wds:Q1001-9063B619-AF9E-4ACD-8890-6315B210E126,
-        wds:Q1001-F34A9E34-92BD-4682-936D-315C31AE75A4,
-        wds:Q1001-FE245218-61A2-4C66-B718-0D34A60F6200,
-        wds:q1001-DBD234A9-F608-4098-95A1-E901A91ED7A4 ;
-    p:P1066 wds:Q1001-2ac79e7d-4aea-69dc-982b-9a6ac6fcedda ;
-    p:P109 wds:q1001-DACE8194-A247-4ABD-8274-1ED870C4B132 ;
-    p:P1149 wds:Q1001-7ecc934e-469a-3bd1-1dc7-85ef529814a6 ;
-    p:P1187 wds:Q1001-DC27A74B-6C43-4211-8EDA-2E3FD2B51F21 ;
-    p:P119 wds:Q1001-C42BA52B-3376-4164-BBC0-D29B980A47E1 ;
-    p:P1196 wds:Q1001-78cd5953-43ba-02ef-49bd-80b4f62b63cb ;
-    p:P1207 wds:Q1001-1822685A-60DF-4B9C-AF75-9CFC5870F3C1 ;
-    p:P1213 wds:Q1001-5ebb738b-48d2-cba1-2581-8ac80f90a639 ;
-    p:P1225 wds:Q1001-AABCAAC7-4401-4CAE-A97F-86ADAED90E3A ;
-    p:P1245 wds:Q1001-9EA8674E-7A78-42B7-9D53-CB90CA00F0CB ;
-    p:P1263 wds:Q1001-C3BB38F2-3789-48DF-A1A8-21E9FB5462FF ;
-    p:P1273 wds:Q1001-6E64D378-A875-49CC-B369-DFE179570E62 ;
-    p:P1280 wds:Q1001-E2C23184-CAC0-4134-9A3C-2DFDDFC9D4FB ;
-    p:P1284 wds:Q1001-FEB5D147-C1E2-443B-B6F0-55B1365D281C ;
-    p:P1296 wds:Q1001-F0C468F7-52EF-453E-93D6-A09539AF6967 ;
-    p:P1309 wds:Q1001-46BE3A3E-4B2A-4A31-9A9F-1885C1130305 ;
-    p:P1315 wds:Q1001-39F608D3-312F-4708-9CF7-EB08E5072319 ;
-    p:P1340 wds:Q1001-4f5cd05c-437b-1c31-5d90-04201866c1fc ;
-    p:P1343 wds:Q1001-10afd0f9-4f8a-d97a-6507-8145e6410b13,
-        wds:Q1001-8552046D-452C-4E27-B2A0-C9975EC95F08,
-        wds:Q1001-FE5985F7-7EB2-469E-A4A5-E82DE101DA70 ;
-    p:P135 wds:Q1001-7edaeb81-4e35-fc9f-673d-e8dbd7eb6366,
-        wds:Q1001-92af80d7-43bb-373b-f658-df1067b1cf2e ;
-    p:P1368 wds:Q1001-D23C0F7A-0462-4B2D-B18A-9560401962BE ;
-    p:P1375 wds:Q1001-ED2D248D-533E-4393-AC2D-BA196C5FA131 ;
-    p:P140 wds:q1001-B1C59D39-73FF-49F7-87A8-2D9AFA6CB847 ;
-    p:P1411 wds:Q1001-2F0C056C-2E7D-45D0-BBF0-F8A6811D2896,
-        wds:Q1001-864FA220-F545-4214-B198-86C457C007C0,
-        wds:Q1001-886A424A-D04A-4153-B07B-2BC5EBB57F9B,
-        wds:Q1001-B91F484A-09EB-42FD-A379-978FF12BCBAB,
-        wds:Q1001-DA7CB99B-FC48-4646-A3E3-8CD8B6441E08 ;
-    p:P1412 wds:Q1001-11174422-ADC0-4AD3-977C-B87BDB64C032,
-        wds:Q1001-17d59567-4d5f-0e29-f5e4-5b74dae46bc2,
-        wds:Q1001-cff2dc9f-467e-388e-5579-3d3935b4c5f3,
-        wds:Q1001-f5658017-40bf-623b-c4f6-6f05b0e18251 ;
-    p:P1415 wds:Q1001-A722B817-03D1-4F71-B0E1-7B7F4331AE6F ;
-    p:P1417 wds:Q1001-0E6426F9-0754-4B81-A809-D45DD85F7D2D,
-        wds:Q1001-3A848CD8-E700-4D57-A143-BE191538D0F8 ;
-    p:P1430 wds:Q1001-ADD0F2D6-0FFA-4960-B759-DE1857CBDBDB ;
-    p:P1441 wds:Q1001-CD1B3F29-36DB-4E91-A9FC-0F5D7F353A82 ;
-    p:P1472 wds:Q1001-4F38AD43-B9DA-4215-9722-A66316BB728A ;
-    p:P1477 wds:Q1001-2ec6010e-4147-4a8a-101b-caa93fa1183d ;
-    p:P1559 wds:Q1001-7bbd9c0b-43d0-cbfb-0257-6e5971081dca ;
-    p:P157 wds:q1001-0627F260-0033-407F-9324-4D40A78F2C4E ;
-    p:P1576 wds:Q1001-E882E45A-249E-4E36-B609-92DFAFE92389 ;
-    p:P1580 wds:Q1001-273B86D3-60B7-4197-AFE4-85D4041DCFFC ;
-    p:P1617 wds:Q1001-b17de6fe-4382-a086-ca17-5c754d183b2d ;
-    p:P166 wds:Q1001-9599d3af-4202-1d7c-ad6a-f2f72dd03a30,
-        wds:q1001-655601C4-F9FF-4446-977C-5355465A0EC2 ;
-    p:P1670 wds:Q1001-a6ea192b-413a-ffb1-f80f-e8e38ed6d9fc ;
-    p:P1695 wds:Q1001-867dd277-4e0d-8d4f-d6ff-f43f0d738631 ;
-    p:P1711 wds:Q1001-5B4CF28A-B8F9-452A-8B51-950FA6893EA4 ;
-    p:P172 wds:Q1001-41330A73-ED4B-4068-9BE7-578D29003734 ;
-    p:P1728 wds:Q1001-e7ce1129-4357-0c62-7027-a6215715661e ;
-    p:P1741 wds:Q1001-4C371E05-8F71-40E1-8AA1-E046AEE56379 ;
-    p:P18 wds:Q1001-A139E50A-085A-433F-A90E-1289952D30BF,
-        wds:Q1001-b71017f0-4a44-befc-d124-7437f42221d2,
-        wds:q1001-b450b775-4631-fe2c-de8b-faeed4c97794 ;
-    p:P1816 wds:Q1001-212AD61C-FAD0-4890-9F64-0C8FC5E766A7 ;
-    p:P1819 wds:Q1001-2fcb426e-4b8d-6585-8124-3a0f8280bcf0 ;
-    p:P1842 wds:Q1001-4981650A-1327-4312-B3B8-077DD1BCB694 ;
-    p:P1890 wds:Q1001-17fcc307-4f5a-a560-9539-e2412b42ac88 ;
-    p:P1899 wds:Q1001-B97379CF-34C8-4BBA-AD65-EDD3A7787A83 ;
-    p:P19 wds:q1001-5B61B6D6-1F01-4959-AC42-01096B133942 ;
-    p:P1938 wds:Q1001-2AC4ACCA-CD3F-4FC9-9436-0F13B3E11D18 ;
-    p:P1953 wds:Q1001-1B0ED897-ED75-4D05-AA7C-1F6380601C59 ;
-    p:P20 wds:Q1001-CDBDD7CE-7384-43A5-8868-09E2B8D1481C ;
-    p:P2031 wds:Q1001-D11109C1-3ED8-4441-916D-487CE5AD6034 ;
-    p:P2048 wds:Q1001-6317a619-49c0-9ce6-e2b0-cb69f7043a4b ;
-    p:P21 wds:Q1001-34E7F3A9-A737-4985-9C2A-6B8FA9E4DAA0 ;
-    p:P213 wds:Q1001-0CC82E62-AFAB-4E07-9854-7D64AB9DA1A6 ;
-    p:P214 wds:q1001-DDF8DE4D-8FE1-48C2-A5FB-3FBA76650C9F ;
-    p:P2163 wds:Q1001-0669356C-7A99-428F-830F-1F00DD557C53 ;
-    p:P2188 wds:Q1001-026f763e-4a98-6770-8b08-9c368aac3f8a ;
-    p:P22 wds:Q1001-5cfe9ed5-4971-7b4c-ec3a-7ed78b5fffb7 ;
-    p:P227 wds:q1001-06D7BFA2-04EE-48C2-BDAE-EC567079969D ;
-    p:P2373 wds:Q1001-ad23a669-4f73-99ed-9355-94cecb5da44e ;
-    p:P244 wds:q1001-AD613D18-64A6-45F7-A8A0-EF1C569F255D ;
-    p:P25 wds:Q1001-64b7cc2e-48d1-13d1-1742-23f10c79518c ;
-    p:P2561 wds:Q1001-bd4761da-4bc2-c83a-ed8a-047db0980b9a ;
-    p:P26 wds:q1001-1B8D0BFD-EC01-48E2-B114-87A1D7B3C316 ;
-    p:P2600 wds:Q1001-3a8604c1-40ca-2cbf-6a29-29f499589f4d ;
-    p:P2605 wds:Q1001-77175913-5AE8-47C2-9677-3CE03E9278A3 ;
-    p:P2607 wds:Q1001-62dbd5e6-4b64-4c03-b1bf-a3bca935da2e ;
-    p:P2632 wds:Q1001-202ce265-4e1e-0999-dd15-96f84d14f9dd,
-        wds:Q1001-2a1b62d8-4e5f-7050-6e7f-fa09aad55629,
-        wds:Q1001-6f4d7367-4d44-5b25-95e0-63dba3d62483,
-        wds:Q1001-a5d9d416-42de-a867-a07d-d2cbb273a957 ;
-    p:P2639 wds:Q1001-ADB9BFA5-2939-4A0D-A59A-3D4A59651FE0 ;
-    p:P268 wds:q1001-76971712-1416-4AED-85E1-300FC3AF298E ;
-    p:P269 wds:q1001-CD8C581F-0E7E-4A96-B87F-7D2E5F2B5E58 ;
-    p:P27 wds:Q1001-b704f057-4122-3a4f-297b-ba553ae94685,
-        wds:Q1001-f3182ff2-408d-4a27-8932-b3e23cdaf329 ;
-    p:P270 wds:Q1001-fa163041-4a70-ab05-2d96-7cb03be39ed3 ;
-    p:P271 wds:Q1001-397ad857-45ff-9f73-a55c-ea5420b334f1 ;
-    p:P2799 wds:Q1001-F9282AE2-4894-4E84-9B4A-F839E61CC94B ;
-    p:P2850 wds:Q1001-3fdb08bf-44d6-708d-127d-f088654aa533 ;
-    p:P2924 wds:Q1001-275df3d3-4057-855f-eb93-442119b03cea ;
-    p:P2949 wds:Q1001-f22a8f89-42f8-b391-6e8f-6753726343de ;
-    p:P2959 wds:Q1001-5A85AC8D-4983-4084-9779-7ABBFF8FA0C2 ;
-    p:P2963 wds:Q1001-5a75050d-47c6-615c-f95c-dfafffb18f13 ;
-    p:P2966 wds:Q1001-6381A2F9-EBF5-4B43-A479-569ACB7585D5 ;
-    p:P3029 wds:Q1001-3CB555BA-1BC6-41CE-8E97-6D67C64CDD72 ;
-    p:P3065 wds:Q1001-E70E7F7A-9F66-4866-A88D-43000AB999EB ;
-    p:P31 wds:q1001-274AA00B-36C4-4C8B-A03F-DDE70E5C4BD2 ;
-    p:P3154 wds:Q1001-AB357443-AB7C-4DB1-950E-0C231D7FDE5F ;
-    p:P3192 wds:Q1001-f6e655de-4b48-7412-27b5-332c2c035756 ;
-    p:P3219 wds:Q1001-1B3F512A-A2D0-4B8C-9BD4-060051A9BE08 ;
-    p:P3221 wds:Q1001-b861f8fa-4dbe-14de-b4c3-4d34fd98229d ;
-    p:P3222 wds:Q1001-C5BBF81D-DF73-432F-A9A0-73FD9C38AA6D ;
-    p:P3232 wds:Q1001-e51ed24c-4a97-992c-5568-6bf3b8e7b59b ;
-    p:P3235 wds:Q1001-f1a92430-4307-3f9b-0a14-3dc7ba02ce61 ;
-    p:P3280 wds:Q1001-BB2482CA-34F5-44D7-BD68-9720D559F594 ;
-    p:P3348 wds:Q1001-6DEBC075-F0E7-49FD-AD77-3235DDA006E2,
-        wds:Q1001-ED5406E1-98FF-4A44-AD41-EB4E6B8800A0 ;
-    p:P3360 wds:Q1001-35bb1942-484d-2b97-5388-0d26e644d639 ;
-    p:P3373 wds:Q1001-5a06a109-4b0e-b42e-6781-1e18d50aad1e,
-        wds:Q1001-e36461fc-4b55-83e4-8fe7-0b59edb251de,
-        wds:Q1001-f662ccff-4187-7efb-bf75-cb9e089ea97d ;
-    p:P3417 wds:Q1001-DB2B1AB0-B61F-4394-BE35-72EF1062CAED ;
-    p:P3430 wds:Q1001-94A69A33-17A6-43B5-BC83-69BBFC28C039 ;
-    p:P345 wds:Q1001-68793038-424c-31c8-1e10-58920301a8cc ;
-    p:P349 wds:q1001-B8E02DA4-988C-4528-9BE6-F1BB470B770D ;
-    p:P3544 wds:Q1001-A0BFFF40-264F-45ED-AF69-F693CE689BBB ;
-    p:P3630 wds:Q1001-81DEB909-7749-46B2-954E-4441E698096B ;
-    p:P373 wds:q1001-4E024BAA-921D-4723-BDAE-37D224C5A7C2 ;
-    p:P3762 wds:Q1001-73B96BD1-D984-4024-A776-6B443080566F,
-        wds:Q1001-E368874A-1D43-4C95-B1F3-EB4024D622FA ;
-    p:P3788 wds:Q1001-E4F1BA8A-F656-416A-BCB5-A54FA5B0EBB0 ;
-    p:P3846 wds:Q1001-8E3C16F9-BE45-454B-95DF-CD76FA16196F ;
-    p:P3847 wds:Q1001-9c7a070e-41f4-0330-e58c-0145ccdf7253,
-        wds:Q1001-ba5cc4c9-4ace-bef8-1864-928058082e58 ;
-    p:P3909 wds:Q1001-dcebdb97-482c-fe76-caf8-6a75ed44b25f ;
-    p:P3965 wds:Q1001-AE569231-50ED-46C2-897D-87F19F1BC588 ;
-    p:P3987 wds:Q1001-2F5F292F-B238-4EC2-A5B7-FB3975ED6883 ;
-    p:P40 wds:Q1001-3FEE2F0C-DE60-46B0-9644-80D2E727931E,
-        wds:q1001-0D062901-1BC9-41CA-96DD-EF567E13CF8C,
-        wds:q1001-B295F716-4F94-4C78-B34C-BA64074005D6,
-        wds:q1001-D43AEB6D-B374-4291-BCB7-70A1CEEF7F90 ;
-    p:P409 wds:Q1001-3CFD91B2-5918-4DB6-AC62-BAC49B1122D5 ;
-    p:P4180 wds:Q1001-abf456f6-4530-0b4b-d491-40fb1dba3ffa ;
-    p:P4200 wds:Q1001-EB2C08DC-DFC5-4BA0-B54C-BC44F5702D53 ;
-    p:P4293 wds:Q1001-2B8DD5C9-971C-4830-B1D4-BBC036A6301E ;
-    p:P434 wds:Q1001-86E8EC11-72B4-4F70-A3D4-E1C638D59A45 ;
-    p:P4342 wds:Q1001-C52B6B0B-FFE7-4367-859C-2B570246597A ;
-    p:P4343 wds:Q1001-4A6AA624-1EDF-4240-8A92-BEFDE7C5D345,
-        wds:Q1001-4C54F223-3526-478C-A698-ED86A4C23C76,
-        wds:Q1001-57A45804-D525-420E-97BC-B3FA0E8C2BD5,
-        wds:Q1001-847804CE-C773-4CEE-AB2A-18A87775D292,
-        wds:Q1001-DCA17B29-6F51-4C96-8AB6-6C86A928A638,
-        wds:Q1001-F421E7F4-304F-482E-8844-0CD641CF6F29 ;
-    p:P4431 wds:Q1001-9eccaeaa-44b5-3cca-d7a6-6495effdbea5 ;
-    p:P4527 wds:Q1001-F45BF186-1205-42B9-9DB3-5560364C5467 ;
-    p:P4619 wds:Q1001-086D0D2B-43D0-41AB-8BE6-1155B634DA9F ;
-    p:P4629 wds:Q1001-2D3EA182-F7AC-4E68-88EC-6949E1C01558 ;
-    p:P463 wds:Q1001-D87B20AA-AD39-48DE-987F-E00A2FC0AB8A,
-        wds:Q1001-ba9ec88c-4ccc-0eb2-bf60-2f740907f385 ;
-    p:P4839 wds:Q1001-328e34f2-4878-4a00-40d3-9c16d2fe3807 ;
-    p:P4862 wds:Q1001-d106f84b-4161-ee52-3075-86c9f847db05 ;
-    p:P5002 wds:Q1001-3be2ab15-4511-a461-2908-e84a526c5319 ;
-    p:P5008 wds:Q1001-2F59DA14-6C4C-4D3E-811F-77CF4C77B485,
-        wds:Q1001-F6F4C264-4411-4B5D-8B5C-F96941E47BF6 ;
-    p:P5019 wds:Q1001-9917f640-478d-121f-a862-c9c9b0fd0e34 ;
-    p:P5034 wds:Q1001-BECF9292-B8DF-45C7-B753-C3836637824E ;
-    p:P5063 wds:Q1001-CEE2EF1C-CB07-4BA3-BF7B-5AD445D3676F ;
-    p:P509 wds:q1001-82F5AE35-E39F-4B08-8B5D-DD83ED953DF1 ;
-    p:P511 wds:Q1001-84e528e2-4cef-f842-a314-9ad4c2db7123 ;
-    p:P535 wds:Q1001-dd23043f-4c27-dc16-2889-c4b909cde804 ;
-    p:P5361 wds:Q1001-AA84E907-0E62-48E7-BFFA-D3EC35A5FB62 ;
-    p:P5375 wds:Q1001-00293AB2-7405-48AD-B286-717929321DCD ;
-    p:P5421 wds:Q1001-3F1D336F-383E-405A-B25A-650506630048 ;
-    p:P551 wds:Q1001-2f322422-4d2d-106d-0e7e-7a80437896f1,
-        wds:Q1001-8eb0d75c-4f6e-91fd-0b2e-09a09dacd12b,
-        wds:Q1001-a90b472d-4505-3049-ee9f-301da08a8403 ;
-    p:P5587 wds:Q1001-4DCA083A-DD8C-47B2-A958-D2D40834FB04 ;
-    p:P569 wds:q1001-C1A77886-2618-462E-961B-96D5AE36FF45 ;
-    p:P570 wds:q1001-2C92ECDC-AAF6-42E8-A844-0EE9006484A5 ;
-    p:P5731 wds:Q1001-EAD37E54-1C8C-45A0-A119-803C4BB4555D ;
-    p:P5739 wds:Q1001-74AEFFFE-CC3B-4F23-850E-CEDA1586A3D9 ;
-    p:P5801 wds:Q1001-39b9c63c-43a1-2693-fea4-7981405d3aab ;
-    p:P5905 wds:Q1001-2061747B-58AA-4E9E-8DC0-98B0E9C66F3F ;
-    p:P6058 wds:Q1001-b6f450cc-40f5-379b-116e-1b97e9defca6 ;
-    p:P607 wds:Q1001-660db186-4e0b-b317-4311-d6d48755f629 ;
-    p:P6351 wds:Q1001-8F2C14A5-C0E9-4BB5-AF14-00B68D81044C ;
-    p:P6394 wds:Q1001-077FA7CA-01D6-425E-AFE4-954C051A0FB7,
-        wds:Q1001-DE5B7FB5-5BD5-4E20-BA6D-233286F85925 ;
-    p:P6404 wds:Q1001-0CFE0D9A-5B41-43B1-999A-3D4B1D37C50E ;
-    p:P646 wds:Q1001-FDF9B2F7-AC26-4C4C-92F1-914E220F7F94 ;
-    p:P648 wds:Q1001-30425F1D-3C39-4EBB-939C-D57AF018828D ;
-    p:P6573 wds:Q1001-9CDD0114-90AC-4C9A-BD7E-7ACACFF1DAC7 ;
-    p:P6656 wds:Q1001-97D1238F-705B-4229-805C-7A3CA827127D ;
-    p:P6683 wds:Q1001-E846CB3B-75A6-4A2D-AE7E-07AC48258141 ;
-    p:P6821 wds:Q1001-FF87FD1C-4A6D-4DD3-A457-A8B6C155C9B4 ;
-    p:P6844 wds:Q1001-8462B407-D0C1-47CE-AD1A-DAA2D34FCCD6 ;
-    p:P6886 wds:Q1001-B39E5A1E-B069-47F8-BD56-8A611A680636 ;
-    p:P69 wds:Q1001-A0E830CF-F5CA-4A78-8EEB-E3DC2F8EFCEB,
-        wds:q1001-445D13E4-54F3-4F6D-99B3-594A520B3BE0,
-        wds:q1001-645C0518-ED40-4B09-8791-6846BAB4A96D ;
-    p:P6900 wds:Q1001-f97c186c-40cf-ec2a-3c06-572998f2a45c ;
-    p:P691 wds:Q1001-3C05E50A-2615-458D-A3B5-D9E2C85C4B70 ;
-    p:P6984 wds:Q1001-FC3073FE-73B3-45CB-B31C-E49D49075F20 ;
-    p:P7026 wds:Q1001-f1edbcfb-4f13-db0a-383c-2c0f70c39161 ;
-    p:P7029 wds:Q1001-30AC4518-4367-45F0-859E-18C6B74D7A4B,
-        wds:Q1001-B80CB41A-ACC7-4ECB-B734-A70222599B97 ;
-    p:P7039 wds:q1001-f5763995-44b4-6cfb-4d5b-bf8bedb8d6ae ;
-    p:P7208 wds:Q1001-8EFA8CC3-3BB4-4E16-B47E-B984B21B1EEC ;
-    p:P7293 wds:Q1001-3da9490b-4eba-2dcb-35a3-b3fcf75de525 ;
-    p:P7311 wds:Q1001-7280CA2E-AFFE-4B28-BDA9-0047D8F3CB98 ;
-    p:P734 wds:Q1001-AF346106-298D-4BB9-8D77-26F38C6FEBFC ;
-    p:P735 wds:Q1001-9AD84E67-7C17-4F21-B783-D8D1A182AB9F ;
-    p:P7369 wds:Q1001-99FAC6D7-228E-4D56-9A17-57462464BEE8 ;
-    p:P737 wds:Q1001-216DA67D-8F40-4B20-A9E2-8C78EA9E56C0,
-        wds:Q1001-5D254333-91C2-45CB-A31C-495D102881E8,
-        wds:Q1001-6A811C29-4DEB-4252-AAB3-4A3804FC2620,
-        wds:Q1001-C6069AF1-1DD5-430B-BAC2-493395B9804B,
-        wds:Q1001-c152e3d8-4ee8-066d-e767-cc70c9fb283a ;
-    p:P7400 wds:Q1001-66b3f8fb-4bb3-353e-a731-1a6ecf72a90e ;
-    p:P7699 wds:Q1001-43E543DB-4ACF-4EEE-8DD2-DD16304D0DBF ;
-    p:P7818 wds:Q1001-43C9E735-F709-4A7B-89F7-925A8B2E9203 ;
-    p:P7827 wds:Q1001-05B96F8F-DF3F-41FC-8FD7-21423BC244FB ;
-    p:P7829 wds:Q1001-EBCD2849-AF84-4747-9041-45C42B6B5F8E ;
-    p:P7832 wds:Q1001-B70A034D-A253-4DB9-81C6-F7016B8EC492 ;
-    p:P7859 wds:Q1001-8A893FB3-021B-4D3E-93E9-940DFBFD7508 ;
-    p:P7902 wds:Q1001-044206C6-495E-40D6-8B76-A65A52406EA0 ;
-    p:P7929 wds:Q1001-5B788A0D-2541-42F3-A402-C6922BFBB77C ;
-    p:P800 wds:Q1001-fa456a2e-407b-c1d8-174c-035b48e36943 ;
-    p:P802 wds:Q1001-C13AC868-2F6D-4018-A273-01361FC2C124 ;
-    p:P8034 wds:Q1001-097585C3-1A15-465C-A92F-7C54F4FD9F5A ;
-    p:P8094 wds:Q1001-7A7EACB5-A024-47E8-B271-FFFBA3663154 ;
-    p:P8179 wds:Q1001-56e12c8b-455f-3cac-4208-8cd35d713c2b ;
-    p:P8189 wds:Q1001-eee9edce-4dc9-17b9-73dc-99e744b9f9c6 ;
-    p:P8349 wds:Q1001-4E626AFD-A694-423D-B02D-6DA4B9203DA9 ;
-    p:P8408 wds:Q1001-EEE3694C-D8A6-4BE2-9C1C-73537438D2CA ;
-    p:P863 wds:Q1001-7771D429-35F6-4ABB-B3D4-EF1F7F682B7B ;
-    p:P866 wds:Q1001-2701D0F7-2D41-493D-8BA4-BEB74B1D7799 ;
-    p:P8750 wds:Q1001-9246555A-8897-4FDD-89A8-4FA19154C6E4 ;
-    p:P8795 wds:Q1001-AC12815B-A5FA-4C69-A9A7-C899EAD43A4A ;
-    p:P8814 wds:Q1001-F0B4BCC2-5547-4696-B12E-961DAB3A353C ;
-    p:P8849 wds:Q1001-8A66382E-95D2-479D-8822-AA93DDDB0516 ;
-    p:P8851 wds:Q1001-ECD40D95-8096-46AC-B0E0-6C58BF006957 ;
-    p:P8902 wds:Q1001-25B8C961-2520-4154-8820-46A1E9BE9680 ;
-    p:P8980 wds:Q1001-4A400076-79AB-4418-928D-D5A93C4CE2B9 ;
-    p:P9037 wds:Q1001-452D0CE3-CFAB-4D15-9E4E-88B2BC1D02BC ;
-    p:P906 wds:Q1001-6E48FDDC-D8B4-454D-BF5D-3BD8AE2B8A05 ;
-    p:P910 wds:Q1001-14B2A63D-4A5A-4E07-A017-532118DA3163 ;
-    p:P9178 wds:Q1001-23AE2CC6-1FF3-4DEF-85A3-8C45D5128321 ;
-    p:P9179 wds:Q1001-DAD0C097-B8AC-4477-82B2-24E75EF05B09 ;
-    p:P9251 wds:Q1001-9AA08813-C199-4A52-BC8B-091591460EF9 ;
-    p:P935 wds:Q1001-7DAF8084-8BB7-4915-847E-64EB7B611E8B ;
-    p:P949 wds:Q1001-160A29EA-78AF-40D3-963C-FE0829257339,
-        wds:Q1001-397D6CA9-48A2-4503-83F1-4A17EFECEE6D,
-        wds:Q1001-4C7EB373-D905-412A-8FE3-F970F9645745,
-        wds:Q1001-52C232C5-7EF1-4A55-83AC-A62AAAF28C11,
-        wds:Q1001-8C616C84-5F4B-40BA-BC52-C28E12C9F396,
-        wds:Q1001-D8609CDD-003E-4255-88E9-58C8B754FF62,
-        wds:Q1001-ECD5CB8D-620D-4CBF-8B7B-CF90F43BA9BD ;
-    p:P950 wds:Q1001-473C421B-42FD-4F98-95CE-2B963D295FA1 ;
-    p:P989 wds:Q1001-4679A692-D652-4B7C-A109-C2367EC4BE68 ;
-    wdtn:P1006 <http://data.bibliotheken.nl/id/thes/p068712030>,
-        <http://data.bibliotheken.nl/id/thes/p352073632> ;
-    wdtn:P1015 <https://livedata.bibsys.no/authority/90687101> ;
-    wdtn:P1149 <http://id.loc.gov/authorities/classification/DS481.G3> ;
-    wdtn:P1617 <http://www.bbc.co.uk/things/15ae116a-32c5-4326-8d35-8f2f7b38718e#id> ;
-    wdtn:P1741 <http://data.beeldengeluid.nl/gtaa/100797> ;
-    wdtn:P1938 <http://www.gutenberg.org/ebooks/author/3490> ;
-    wdtn:P214 <http://viaf.org/viaf/71391324> ;
-    wdtn:P2163 <http://id.worldcat.org/fast/33822> ;
-    wdtn:P227 <https://d-nb.info/gnd/118639145> ;
-    wdtn:P244 <https://id.loc.gov/authorities/names/n79041626> ;
-    wdtn:P268 <http://data.bnf.fr/ark:/12148/cb11904030r#about> ;
-    wdtn:P269 <http://www.idref.fr/026880504/id> ;
-    wdtn:P2799 <http://data.cervantesvirtual.com/person/74484> ;
-    wdtn:P3348 <http://data.nlg.gr/resource/authority/record152363>,
-        <http://data.nlg.gr/resource/authority/record75266> ;
-    wdtn:P349 <http://id.ndl.go.jp/auth/ndlna/00440485> ;
-    wdtn:P434 <http://musicbrainz.org/artist/b0b244dd-b976-4dc4-ba7a-a394da724de0> ;
-    wdtn:P5034 <http://lod.nl.go.kr/resource/KAC199609638> ;
-    wdtn:P5063 <http://globalwordnet.org/ili/i95204> ;
-    wdtn:P5361 <https://bnb.data.bl.uk/doc/person/GandhiMahatma1869-1948> ;
-    wdtn:P5587 <https://libris.kb.se/42gknt6n1m6s83l> ;
-    wdtn:P5739 <http://catalogo.pusc.it/auth/30257> ;
-    wdtn:P646 <http://g.co/kg/m/04xfb> ;
-    wdtn:P648 <http://openlibrary.org/works/OL891A> ;
-    wdtn:P6821 <http://www.alvin-portal.org/alvin/view.jsf?pid=alvin-person:11286> ;
-    wdtn:P8408 <http://kbpedia.org/kko/rc/MahatmaGandhi> ;
-    wdtn:P8980 <https://urn.fi/URN:NBN:fi:au:finaf:000042518> ;
-    wdtn:P906 <http://libris.kb.se/resource/auth/275000> ;
-    wdtn:P950 <http://datos.bne.es/resource/XX1150077> ;
-    wdt:P1005 "29946"^^xsd:string ;
-    wdt:P1006 "068712030"^^xsd:string,
-        "352073632"^^xsd:string ;
+wd:P101 rdfs:label "कार्य क्षेत्र"@hi .
+
+wd:P102 rdfs:label "राजनीतिक दल के सदस्य"@hi .
+
+wd:P103 rdfs:label "मातृ भाषा"@hi .
+
+wd:P106 rdfs:label "व्यवसाय"@hi .
+
+wd:P119 rdfs:label "अंतिम विश्राम का स्थान"@hi .
+
+wd:P1196 rdfs:label "मौत का कारण"@hi .
+
+wd:P135 rdfs:label "प्रवृत्ति"@hi .
+
+wd:P140 rdfs:label "धर्म"@hi .
+
+wd:P1412 rdfs:label "बोली या लेखी भाषा"@hi .
+
+wd:P157 rdfs:label "हत्यारा"@hi .
+
+wd:P172 rdfs:label "जातीय समूह"@hi .
+
+wd:P19 rdfs:label "जन्म स्थान"@hi .
+
+wd:P20 rdfs:label "मृत्यु का स्थान"@hi .
+
+wd:P21 rdfs:label "लिंग"@hi .
+
+wd:P22 rdfs:label "पिता"@hi .
+
+wd:P25 rdfs:label "माता"@hi .
+
+wd:P26 rdfs:label "जीवन साथी"@hi .
+
+wd:P27 rdfs:label "नागरिकता"@hi .
+
+wd:P31 rdfs:label "का उदहारण है"@hi .
+
+wd:P40 rdfs:label "संतान"@hi .
+
+wd:P463 rdfs:label "का सदस्य"@hi .
+
+wd:P509 rdfs:label "मृत्यु का कारण"@hi .
+
+wd:P551 rdfs:label "निवास"@hi .
+
+wd:P607 rdfs:label "संघर्ष में भाग लिया"@hi .
+
+wd:P69 rdfs:label "मातृसंस्था"@hi .
+
+wd:P735 rdfs:label "दिया गया नाम"@hi .
+
+wd:P800 rdfs:label "उल्लेखनीय कार्य"@hi .
+
+wd:P910 rdfs:label "विषय की मुख्य श्रेणी"@hi .
+
+wd:Q1001 rdfs:label "महात्मा गांधी"@hi ;
     wdt:P101 wd:Q4932206,
         wd:Q5891 ;
-    wdt:P1015 "90687101"^^xsd:string ;
-    wdt:P1017 "ADV10274916"^^xsd:string ;
     wdt:P102 wd:Q10225 ;
     wdt:P103 wd:Q5137 ;
-    wdt:P106 wd:Q1021386,
-        wd:Q11774156,
+    wdt:P106 wd:Q11774156,
         wd:Q11774202,
-        wd:Q15958642,
-        wd:Q16323111,
-        wd:Q17351648,
-        wd:Q18814623,
         wd:Q1930187,
-        wd:Q22336956,
         wd:Q3242115,
         wd:Q4964182,
         wd:Q808967,
         wd:Q82955 ;
-    wdt:P1066 wd:Q16382 ;
-    wdt:P109 <http://commons.wikimedia.org/wiki/Special:FilePath/Gandhi%20signature.svg> ;
-    wdt:P1149 "DS481.G3"^^xsd:string ;
-    wdt:P1187 "A024196"^^xsd:string ;
     wdt:P119 wd:Q1210083 ;
     wdt:P1196 wd:Q149086 ;
-    wdt:P1207 "n95200252"^^xsd:string ;
-    wdt:P1213 "000144994"^^xsd:string ;
-    wdt:P1225 "10582643"^^xsd:string ;
-    wdt:P1245 "1444027"^^xsd:string ;
-    wdt:P1263 "653/000065458"^^xsd:string ;
-    wdt:P1273 "a10089597"^^xsd:string ;
-    wdt:P1280 "8239459"^^xsd:string ;
-    wdt:P1284 "00000000342"^^xsd:string ;
-    wdt:P1296 "0028943"^^xsd:string ;
-    wdt:P1309 "vtls000831692"^^xsd:string ;
-    wdt:P1315 "829877"^^xsd:string ;
-    wdt:P1340 wd:Q17244894 ;
-    wdt:P1343 wd:Q20743760,
-        wd:Q46002746,
-        wd:Q67311526 ;
-    wdt:P135 wd:Q76611,
-        wd:Q83364 ;
-    wdt:P1368 "000008100"^^xsd:string ;
-    wdt:P1375 "000033749"^^xsd:string ;
+    wdt:P135 wd:Q83364 ;
     wdt:P140 wd:Q9089 ;
-    wdt:P1411 wd:Q35637 ;
     wdt:P1412 wd:Q5137 ;
-    wdt:P1415 "33318"^^xsd:string ;
-    wdt:P1417 "biography/Mahatma-Gandhi"^^xsd:string,
-        "biography/Mohandas-Karamchand-Gandhi"^^xsd:string ;
-    wdt:P1430 "306"^^xsd:string ;
-    wdt:P1441 wd:Q24050047 ;
-    wdt:P1472 "Mohandas K. Gandhi"^^xsd:string ;
-    wdt:P1477 "મોહનદાસ ગાંધી"@gu ;
-    wdt:P1559 "મોહનદાસ ગાંધી"@gu ;
     wdt:P157 wd:Q312553 ;
-    wdt:P1576 wd:Q83364 ;
-    wdt:P1580 "a1248656"^^xsd:string ;
-    wdt:P1617 "15ae116a-32c5-4326-8d35-8f2f7b38718e"^^xsd:string ;
-    wdt:P166 wd:Q207826,
-        wd:Q727815 ;
-    wdt:P1670 "0015J0020"^^xsd:string ;
-    wdt:P1695 "A11789062"^^xsd:string ;
-    wdt:P1711 "10007"^^xsd:string ;
     wdt:P172 wd:Q1282294 ;
-    wdt:P1728 "mn0001926419"^^xsd:string ;
-    wdt:P1741 "100797"^^xsd:string ;
-    wdt:P18 <http://commons.wikimedia.org/wiki/Special:FilePath/Mahatma-Gandhi%2C%20studio%2C%201931.jpg> ;
-    wdt:P1816 "mp54882"^^xsd:string ;
-    wdt:P1819 "I00482323"^^xsd:string ;
-    wdt:P1842 "Gandhi, Mohandas Karamchand (1869-1948)"^^xsd:string ;
-    wdt:P1890 "000038326"^^xsd:string ;
-    wdt:P1899 "622"^^xsd:string ;
     wdt:P19 wd:Q6419912 ;
-    wdt:P1938 "3490"^^xsd:string ;
-    wdt:P1953 "295064"^^xsd:string ;
     wdt:P20 wd:Q1381516 ;
-    wdt:P2031 "1919-01-01T00:00:00+00:00"^^xsd:dateTime ;
-    wdt:P2048 164.0 ;
     wdt:P21 wd:Q6581097 ;
-    wdt:P213 "0000 0001 2138 6043"^^xsd:string ;
-    wdt:P214 "71391324"^^xsd:string ;
-    wdt:P2163 "33822"^^xsd:string ;
-    wdt:P2188 "3459"^^xsd:string ;
     wdt:P22 wd:Q11735530 ;
-    wdt:P227 "118639145"^^xsd:string ;
-    wdt:P2373 "Mahatma-gandhi"^^xsd:string ;
-    wdt:P244 "n79041626"^^xsd:string ;
     wdt:P25 wd:Q48438546 ;
-    wdt:P2561 "bapu ji"@en ;
     wdt:P26 wd:Q264908 ;
-    wdt:P2600 "6000000003922874202"^^xsd:string ;
-    wdt:P2605 "97548"^^xsd:string ;
-    wdt:P2607 "dd57a4a2-3ba5-495e-bebd-f30c187b394c"^^xsd:string ;
-    wdt:P2632 wd:Q142534,
-        wd:Q2344976 ;
-    wdt:P2639 "5237e24523334846ac1e310fb935f6ee"^^xsd:string ;
-    wdt:P268 "11904030r"^^xsd:string ;
-    wdt:P269 "026880504"^^xsd:string ;
     wdt:P27 wd:Q129286,
         wd:Q1775277 ;
-    wdt:P270 "n2004372449"^^xsd:string ;
-    wdt:P271 "DA00595167"^^xsd:string ;
-    wdt:P2799 "74484"^^xsd:string ;
-    wdt:P2850 "539416748"^^xsd:string ;
-    wdt:P2924 "2343943"^^xsd:string ;
-    wdt:P2949 "Gandhi-5"^^xsd:string ;
-    wdt:P2959 wd:Q21200566 ;
-    wdt:P2963 "5810891"^^xsd:string ;
-    wdt:P2966 "gandhi-mahatma-1869-1948"^^xsd:string ;
-    wdt:P3029 "F70526"^^xsd:string ;
-    wdt:P3065 "02-A003277799"^^xsd:string ;
     wdt:P31 wd:Q5 ;
-    wdt:P3154 "gandhmoh"^^xsd:string ;
-    wdt:P3192 "Mahatma+Gandhi"^^xsd:string ;
-    wdt:P3219 "mohandas-karamchand-gandhi"^^xsd:string ;
-    wdt:P3221 "person/mohandas-k-gandhi"^^xsd:string ;
-    wdt:P3222 "mohandas-karamchand-gandhi"^^xsd:string ;
-    wdt:P3232 "Mahatma Gandhi"^^xsd:string ;
-    wdt:P3235 "mahatma-gandhi"^^xsd:string ;
-    wdt:P3280 "0000021706"^^xsd:string ;
-    wdt:P3348 "152363"^^xsd:string,
-        "75266"^^xsd:string ;
-    wdt:P3360 "3320"^^xsd:string ;
-    wdt:P3373 wd:Q100778818,
-        wd:Q100778893,
-        wd:Q100778902 ;
-    wdt:P3417 "Mahatma-Gandhi"^^xsd:string ;
-    wdt:P3430 "w6bs9g59"^^xsd:string ;
-    wdt:P345 "nm0003987"^^xsd:string ;
-    wdt:P349 "00440485"^^xsd:string ;
-    wdt:P3544 "48807"^^xsd:string ;
-    wdt:P3630 "30535"^^xsd:string ;
-    wdt:P373 "Mohandas K. Gandhi"^^xsd:string ;
-    wdt:P3762 "22978"^^xsd:string,
-        "37948"^^xsd:string ;
-    wdt:P3788 "000032619"^^xsd:string ;
-    wdt:P3846 "87097968338832"^^xsd:string ;
-    wdt:P3847 "person:gandhi_mahatma_(1869-1948)"^^xsd:string ;
-    wdt:P3909 "हे राम"@hi ;
-    wdt:P3965 "32130"^^xsd:string ;
-    wdt:P3987 "161878"^^xsd:string ;
     wdt:P40 wd:Q1280678,
         wd:Q1390715,
         wd:Q185403,
         wd:Q732728 ;
-    wdt:P409 "35111345"^^xsd:string ;
-    wdt:P4180 "32"^^xsd:string ;
-    wdt:P4200 "61656"^^xsd:string ;
-    wdt:P4293 "pe/005823"^^xsd:string ;
-    wdt:P434 "b0b244dd-b976-4dc4-ba7a-a394da724de0"^^xsd:string ;
-    wdt:P4342 "Mahatma_Gandhi"^^xsd:string ;
-    wdt:P4343 "GANDHI, M.K"^^xsd:string,
-        "GANDHI, M.K."^^xsd:string,
-        "GANDHI, MAHATMA"^^xsd:string,
-        "GANDHI, MOHANDAS KARAMCHAND"^^xsd:string,
-        "Gandhi, M. K."^^xsd:string,
-        "Gandhi, Mohandas Karamchand"^^xsd:string ;
-    wdt:P4431 "birthday-of-mohandas-karamchand-gandhi"^^xsd:string ;
-    wdt:P4527 "291065"^^xsd:string ;
-    wdt:P4619 "000602192"^^xsd:string ;
-    wdt:P4629 "Gandhi, Mahatma, 1869-1948"^^xsd:string ;
-    wdt:P463 wd:Q1233784,
-        wd:Q2154954 ;
-    wdt:P4839 "Entity[\"Person\", \"MahatmaGandhi::s6r2s\"]"^^xsd:string ;
-    wdt:P4862 "B002ZFZSUA"^^xsd:string ;
-    wdt:P5002 "161646"^^xsd:string ;
-    wdt:P5008 wd:Q13382529,
-        wd:Q5460604 ;
-    wdt:P5019 "gandhi-mohandas-karamchand"^^xsd:string ;
-    wdt:P5034 "KAC199609638"^^xsd:string ;
-    wdt:P5063 "i95204"^^xsd:string ;
+    wdt:P463 wd:Q2154954 ;
     wdt:P509 wd:Q2140674 ;
-    wdt:P511 wd:Q12937862 ;
-    wdt:P535 "22952"^^xsd:string ;
-    wdt:P5361 "GandhiMahatma1869-1948"^^xsd:string ;
-    wdt:P5375 "6542"^^xsd:string ;
-    wdt:P5421 "66532"^^xsd:string ;
     wdt:P551 wd:Q258,
         wd:Q668,
         wd:Q84 ;
-    wdt:P5587 "42gknt6n1m6s83l"^^xsd:string ;
-    wdt:P569 "1869-10-02T00:00:00+00:00"^^xsd:dateTime ;
-    wdt:P570 "1948-01-30T00:00:00+00:00"^^xsd:dateTime ;
-    wdt:P5731 "40045"^^xsd:string ;
-    wdt:P5739 "30257"^^xsd:string ;
-    wdt:P5801 "Mahatma_Gandhi"^^xsd:string ;
-    wdt:P5905 "4005-37785"^^xsd:string ;
-    wdt:P6058 "personnage/wd/120779"^^xsd:string ;
     wdt:P607 wd:Q239344 ;
-    wdt:P6351 "332613"^^xsd:string ;
-    wdt:P6394 "a11144488"^^xsd:string,
-        "a11481493"^^xsd:string ;
-    wdt:P6404 "mohandas-karamchand-gandhi"^^xsd:string ;
-    wdt:P646 "/m/04xfb"^^xsd:string ;
-    wdt:P648 "OL891A"^^xsd:string ;
-    wdt:P6573 "Mahatma_Gandhi"^^xsd:string ;
-    wdt:P6656 "212473"^^xsd:string ;
-    wdt:P6683 "169559"^^xsd:string ;
-    wdt:P6821 "alvin-person:11286"^^xsd:string ;
-    wdt:P6844 "152624"^^xsd:string ;
-    wdt:P6886 wd:Q5137 ;
-    wdt:P69 wd:Q1233784,
-        wd:Q193196,
+    wdt:P69 wd:Q193196,
         wd:Q4722851 ;
-    wdt:P6900 "マハトマ・ガンジー"^^xsd:string ;
-    wdt:P691 "jn20000601721"^^xsd:string ;
-    wdt:P6984 "m-k-gandhi"^^xsd:string ;
-    wdt:P7026 "28610"^^xsd:string ;
-    wdt:P7029 "77108557"^^xsd:string,
-        "777162"^^xsd:string ;
-    wdt:P7039 "000101843"^^xsd:string ;
-    wdt:P7208 "g/mohandas-karamchand-gandhi"^^xsd:string ;
-    wdt:P7293 "9810675952005606"^^xsd:string ;
-    wdt:P7311 "1277"^^xsd:string ;
-    wdt:P734 wd:Q302736 ;
     wdt:P735 wd:Q20658450 ;
-    wdt:P7369 "000010686"^^xsd:string ;
-    wdt:P737 wd:Q131149,
-        wd:Q179126,
-        wd:Q183167,
-        wd:Q7243,
-        wd:Q9441 ;
-    wdt:P7400 "gandhimahatma"^^xsd:string ;
-    wdt:P7699 "LNB:V*39003;=BB"^^xsd:string ;
-    wdt:P7818 "Mohandas_Karamchand_Gandhi"^^xsd:string ;
-    wdt:P7827 "Mahatma_Gandhi"^^xsd:string ;
-    wdt:P7829 "Mahatma_Gandhi"^^xsd:string ;
-    wdt:P7832 "Mahatma_Gandhi"^^xsd:string ;
-    wdt:P7859 "lccn-n79041626"^^xsd:string ;
-    wdt:P7902 "118639145"^^xsd:string ;
-    wdt:P7929 "p=mohandas+karamchand;n=gandhi"^^xsd:string ;
     wdt:P800 wd:Q194279 ;
-    wdt:P802 wd:Q13021 ;
-    wdt:P8034 "495/79916"^^xsd:string ;
-    wdt:P8094 "gandhimohan"^^xsd:string ;
-    wdt:P8179 "ncf10079973"^^xsd:string ;
-    wdt:P8189 "987007261688705171"^^xsd:string ;
-    wdt:P8349 "22640"^^xsd:string ;
-    wdt:P8408 "MahatmaGandhi"^^xsd:string ;
-    wdt:P863 "thinker/3053"^^xsd:string ;
-    wdt:P866 "mahatma-gandhi"^^xsd:string ;
-    wdt:P8750 "301783"^^xsd:string ;
-    wdt:P8795 "3754"^^xsd:string ;
-    wdt:P8814 "11009335-n"^^xsd:string ;
-    wdt:P8849 "3661669"^^xsd:string ;
-    wdt:P8851 "2780263"^^xsd:string ;
-    wdt:P8902 "people/62377"^^xsd:string ;
-    wdt:P8980 "000042518"^^xsd:string ;
-    wdt:P9037 "4d3544db-c1d5-4403-9b50-1b3e636d9976"^^xsd:string ;
-    wdt:P906 "275000"^^xsd:string ;
-    wdt:P910 wd:Q6512732 ;
-    wdt:P9178 "2604"^^xsd:string ;
-    wdt:P9179 "46765"^^xsd:string ;
-    wdt:P9251 "99133"^^xsd:string ;
-    wdt:P935 "Mohandas K. Gandhi"^^xsd:string ;
-    wdt:P949 "000051014"^^xsd:string,
-        "000599587"^^xsd:string,
-        "000603898"^^xsd:string,
-        "000604913"^^xsd:string,
-        "000607437"^^xsd:string,
-        "000607438"^^xsd:string,
-        "001778255"^^xsd:string ;
-    wdt:P950 "XX1150077"^^xsd:string ;
-    wdt:P989 <http://commons.wikimedia.org/wiki/Special:FilePath/Nl-Mahatma%20Gandhi-article.ogg> .
+    wdt:P910 wd:Q6512732 .
+
+wd:Q10225 rdfs:label "भारतीय राष्ट्रीय कांग्रेस"@hi .
+
+wd:Q11735530 rdfs:label "करमचंद गाँधी"@hi .
+
+wd:Q11774156 rdfs:label "संस्मरण लेखक"@hi .
+
+wd:Q11774202 rdfs:label "निबंधकार"@hi .
+
+wd:Q1210083 rdfs:label "राजघाट समाधि परिसर"@hi .
+
+wd:Q1280678 rdfs:label "मणिलाल गाँधी"@hi .
+
+wd:Q1282294 rdfs:label "गुजराती"@hi .
+
+wd:Q129286 rdfs:label "ब्रिटिश राज"@hi .
+
+wd:Q1381516 rdfs:label "गाँधी स्मृति"@hi .
+
+wd:Q1390715 rdfs:label "हरिलाल मोहनदास गांधी"@hi .
+
+wd:Q149086 rdfs:label "मानव हत्या"@hi .
+
+wd:Q1775277 rdfs:label "भारतीय अधिराज्य"@hi .
+
+wd:Q185403 rdfs:label "रामदास गांधी"@hi .
+
+wd:Q1930187 rdfs:label "पत्रकार"@hi .
+
+wd:Q193196 rdfs:label "यूनिवर्सिटी कॉलेज, लन्दन"@hi .
+
+wd:Q194279 rdfs:label "सत्याग्रह"@hi .
+
+wd:Q20658450 rdfs:label "ਮੋਹਨਦਾਸ"@hi .
+
+wd:Q2140674 rdfs:label "बैलिस्टिक आघात"@hi .
+
+wd:Q2154954 rdfs:label "शाकाहारी समाज"@hi .
+
+wd:Q239344 rdfs:label "दांडी मार्च"@hi .
+
+wd:Q258 rdfs:label "दक्षिण अफ़्रीका"@hi .
+
+wd:Q264908 rdfs:label "कस्तूरबा गांधी"@hi .
+
+wd:Q312553 rdfs:label "नाथूराम विनायक गोडसे"@hi .
+
+wd:Q3242115 rdfs:label "क्रांतिकारी"@hi .
+
+wd:Q4722851 rdfs:label "अल्फ्रेड हाई स्कूल, राजकोट"@hi .
+
+wd:Q48438546 rdfs:label "पुतलीबाई करमचंद गांधी"@hi .
+
+wd:Q4932206 rdfs:label "विधिशास्त्र"@hi .
+
+wd:Q4964182 rdfs:label "दार्शनिक"@hi .
+
+wd:Q5 rdfs:label "मनुष्य"@hi .
+
+wd:Q5891 rdfs:label "दर्शनशास्त्र"@hi .
+
+wd:Q6419912 rdfs:label "पोरबन्दर"@hi .
+
+wd:Q6512732 rdfs:label "श्रेणी:महात्मा गांधी"@hi .
+
+wd:Q6581097 rdfs:label "पुरुष"@hi .
+
+wd:Q668 rdfs:label "भारत"@hi .
+
+wd:Q732728 rdfs:label "देवदास गांधी"@hi .
+
+wd:Q808967 rdfs:label "बैरिस्टर"@hi .
+
+wd:Q82955 rdfs:label "राजनीतिज्ञ"@hi .
+
+wd:Q83364 rdfs:label "शाकाहार"@hi .
+
+wd:Q84 rdfs:label "लंदन"@hi .
+
+wd:Q9089 rdfs:label "हिन्दू धर्म"@hi .
+
+wd:Q5137 rdfs:label "गुजराती भाषा"@hi .
 
