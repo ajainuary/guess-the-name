@@ -44,20 +44,40 @@ itemGraph = rdflib.Graph()
 
 # construct the URL for the HTTP GET call
 endpointUrl = 'https://query.wikidata.org/sparql'
+item = 'Q1001'
 query = '''
 CONSTRUCT {
   ?item ?predicate ?field.
   ?item rdfs:label ?itemLabel.
   ?property rdfs:label ?propertyLabel.
   ?field rdfs:label ?fieldLabel.
+
+  ?field ?predicate1 ?field1.
+  ?property1 rdfs:label ?property1Label.
+  ?field1 rdfs:label ?field1Label.
+
+  ?field1 ?predicate2 ?field2.
+  ?property2 rdfs:label ?property2Label.
+  ?field2 rdfs:label ?field2Label.
 }
 WHERE {
-  VALUES (?item) {(wd:Q1001)}
+  VALUES (?item) {(wd:''' + item + ''')}
   ?item ?predicate ?field.
   ?item rdfs:label ?itemLabel. filter(lang(?itemLabel) = "hi").
   ?property wikibase:directClaim ?predicate.
   ?property rdfs:label ?propertyLabel.  filter(lang(?propertyLabel) = "hi").
   ?field rdfs:label ?fieldLabel.  filter(lang(?fieldLabel) = "hi").
+  
+  ?field ?predicate1 ?field1.
+  ?property1 wikibase:directClaim ?predicate1.
+  ?property1 rdfs:label ?property1Label. filter(lang(?property1Label) = "hi").
+  ?field1 rdfs:label ?field1Label. filter(lang(?field1Label) = "hi").
+
+  ?field1 ?predicate2 ?field2.
+  ?property2 wikibase:directClaim ?predicate2.
+  ?property2 rdfs:label ?property2Label. filter(lang(?property2Label) = "hi").
+  ?field2 rdfs:label ?field2Label. filter(lang(?field2Label) = "hi").
+  
   SERVICE wikibase:label { bd:serviceParam wikibase:language "hi". }
 }
 '''
@@ -68,26 +88,26 @@ url = endpointUrl + '?query=' + urllib.parse.quote(query)
 result = itemGraph.parse(url)
 print('There are ', len(result), ' triples about item ', item)
 
-for s, p, o in itemGraph.triples((None, None, None)):
-    sl = itemGraph.preferredLabel(URIRef(s), lang='hi')
-    if not sl:
-        sl = s
-    else:
-        sl = sl[0][1]
+# for s, p, o in itemGraph.triples((None, None, None)):
+#     sl = itemGraph.preferredLabel(URIRef(s), lang='hi')
+#     if not sl:
+#         sl = s
+#     else:
+#         sl = sl[0][1]
 
-    pl = itemGraph.preferredLabel(URIRef(s), lang='hi')
-    if not pl:
-        pl = p
-    else:
-        pl = pl[0][1]
+#     pl = itemGraph.preferredLabel(URIRef(p), lang='hi')
+#     if not pl:
+#         pl = p
+#     else:
+#         pl = pl[0][1]
 
-    ol = itemGraph.preferredLabel(URIRef(s), lang='hi')
-    if not ol:
-        ol = o
-    else:
-        ol = ol[0][1]
+#     ol = itemGraph.preferredLabel(URIRef(o), lang='hi')
+#     if not ol:
+#         ol = o
+#     else:
+#         ol = ol[0][1]
 
-    print('{} {} {}'.format(sl, pl, ol))
+#     print('{} {} {}'.format(sl, pl, ol))
 
 # #serialize the graph as Turtle and save it in a file
 r = itemGraph.serialize(destination='rdflibOutput.ttl', format='turtle')
@@ -134,7 +154,7 @@ print(itemGraph.toPython())
 g = Graph(itemGraph)
 ans = g.nodes()
 for x in ans:
-    print(x.qid, x.label)
+    print(x.qid, x.label[0])
     props = x.properties()
     for y in props:
         print(y, x.object(y))
