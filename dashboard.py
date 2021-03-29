@@ -83,7 +83,7 @@ app.layout = html.Div([
         )
     ]),
 
-    html.Div(className='one columns', children=[
+    html.Div(className='two columns', children=[
             dcc.Dropdown(
                 id='NodeList',
                 options=[
@@ -104,18 +104,6 @@ app.layout = html.Div([
 
     html.Div(className='two columns', children=[
             dcc.Dropdown(
-                id='EdgeList',
-                options=[
-                    {'label': 'Played for', 'value': 'PLAY'},
-                    {'label': 'Son of', 'value': 'SON'},
-                    {'label': 'Brother of', 'value': 'BRO'}
-                ],
-                value='PLAY',
-                multi=False,
-                placeholder="Select property"
-        )]),
-    html.Div(className='one columns', children=[
-            dcc.Dropdown(
                 id='SourceList',
                 options=[
                     {'label': 'Yusuf Pathan', 'value': 'YP'},
@@ -126,7 +114,21 @@ app.layout = html.Div([
                 multi=False,
                 placeholder="Select source node"
         )]),
-    html.Div(className='one columns', children=[
+
+    html.Div(className='two columns', children=[
+            dcc.Dropdown(
+                id='EdgeList',
+                options=[
+                    {'label': 'Played for', 'value': 'PLAY'},
+                    {'label': 'Son of', 'value': 'SON'},
+                    {'label': 'Brother of', 'value': 'BRO'}
+                ],
+                value='PLAY',
+                multi=False,
+                placeholder="Select property"
+        )]),
+    
+    html.Div(className='two columns', children=[
             dcc.Dropdown(
                 id='TargetList',
                 options=[
@@ -143,24 +145,59 @@ app.layout = html.Div([
     html.Button('Add Edge', id='btn-add-edge', n_clicks_timestamp=0),
     html.Button('Remove Edge', id='btn-remove-edge', n_clicks_timestamp=0)
         ]),
-    html.Div(id='placeholder1')
+    # html.Div(id='placeholder1')
+    # html.Div(className='two columns', children=[
+    #         dcc.Dropdown(
+    #             id='Node1List',
+    #             options=[
+    #                 {'label': 'Sam Curran', 'value': 'SC'},
+    #                 {'label': 'Tom Curran', 'value': 'TC'},
+    #                 {'label': 'England', 'value': 'ENG'}
+    #             ],
+    #             value='ENG',
+    #             multi=False,
+    #             placeholder="Select a node"
+    #     )]),
+
+    # html.Div([
+    # html.Button('Add Node', id='btn-add-node-eng', n_clicks_timestamp=0),
+    # html.Button('Remove Node', id='btn-remove-node-eng', n_clicks_timestamp=0)
+    #     ]),
+    # html.Div(id='placeholder-eng'),
 ])
+
 
 @app.callback(Output('cytoscape', 'elements'),
               [Input('btn-add-node', 'n_clicks_timestamp'),
               Input('btn-remove-node', 'n_clicks_timestamp'),
-              Input('btn-add-node', 'n_clicks_timestamp'),
-              Input('btn-remove-node', 'n_clicks_timestamp'),
+              Input('btn-add-edge', 'n_clicks_timestamp'),
+              Input('btn-remove-edge', 'n_clicks_timestamp'),
               State('NodeList', 'value'),
               State('EdgeList', 'value'),
               State('SourceList', 'value'),
-              State('TargetList', 'value'),
-              State('cytoscape', 'elements')])
-def add_delete_node(btn_add_node, btn_remove_node, btn_add_edge,btn_remove_edge,nodeId, edgeId,sourceid,targetid,elements):
+              State('TargetList', 'value')
+              ])
+def add_delete_node(btn_add_node, btn_remove_node,btn_add_edge,btn_remove_edge,nodeId,edgeId,sourceId,targetId):
     global nodes
     global edges
+
+    ctx = dash.callback_context
+    if not ctx.triggered:
+        return nodes+edges
+    else:
+        button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+        print(button_id)
+    ctx_msg = json.dumps({
+        'states': ctx.states,
+        'triggered': ctx.triggered,
+        'inputs': ctx.inputs
+    }, indent=2)
+    # print(ctx_msg)
     # If the add button was clicked most recently
-    if int(btn_add_node) > int(btn_remove_node):
+    if button_id == 'btn-add-edge':
+        print(edgeId,sourceId,targetId)
+    if button_id == 'btn-add-node':
+        print("Node Added")
         nodes.append({'data': {
                                 'id': str(nodeId), 
                                 'label': 'Node ' + str(nodeId)
@@ -169,27 +206,31 @@ def add_delete_node(btn_add_node, btn_remove_node, btn_add_edge,btn_remove_edge,
         return nodes + edges
 
     # If the remove button was clicked most recently
-    elif int(btn_remove_node) > int(btn_add_node):
-            nodes = [x for x in nodes if not x['data']['id'] == nodeId]
-            return nodes + edges
-    if int(btn_add_edge) > int(btn_remove_edge):
-        edges.append({'data': {
-                                'id': "edge" + str(edgeId), 
-                                'source':str(sourceid), 
-                                'target':str(targetid),
-                                'label': 'edge ' + str(sourceid) + str(targetid) 
-                                }
-                            })
+    elif button_id == 'btn-remove-node':
+        nodes = [x for x in nodes if not x['data']['id'] == nodeId]
         return nodes + edges
 
-    # If the remove button was clicked most recently
-    elif int(btn_remove_edge) > int(btn_add_edge):
-            nodes = [x for x in edges if not x['data']['id'] == edgeId]
-            return nodes + edges
+    # if int(btn_add_edge) > int(btn_remove_edge):
+    elif button_id == 'btn-add-edge':
+        
+        edges.append({'data': {
+                            'id': str(edgeId), 
+                            'source':str(sourceId), 
+                            'target':str(targetId),
+                            'label': f'{sourceId}_{edgeId}_{targetId}' 
+                            }
+                    })
+        print(edges)
+        return nodes + edges
 
+
+    elif button_id == 'btn-remove-edge':
+        edges = [x for x in edges if not x['data']['id'] == edgeId]
+        print(edges)
+        return nodes + edges
+    
     # Neither have been clicked yet (or fallback condition)
-    return elements
-
+    return nodes+edges
 
 
 # @app.callback(Output('cytoscape', 'elements'),
@@ -203,25 +244,21 @@ def add_delete_node(btn_add_node, btn_remove_node, btn_add_edge,btn_remove_edge,
 #     global nodes
 #     global edges
 #     # If the add button was clicked most recently
-    if int(btn_add) > int(btn_remove):
-        # nodes.append({'data': {
-        #                         'id': str(nodeId), 
-        #                         'label': 'Node ' + str(nodeId)
-        #                         } 
-        #             })
-        edges.append({'data': {
-                                'id': "edge" + str(edgeId), 
-                                'source':str(sourceid), 
-                                'target':str(targetid),
-                                'label': 'edge ' + str(sourceid) + str(targetid) 
-                                }
-                            })
-        return nodes + edges
+    # if int(btn_add) > int(btn_remove):
+       
+        # edges.append({'data': {
+        #                         'id': "edge" + str(edgeId), 
+        #                         'source':str(sourceid), 
+        #                         'target':str(targetid),
+        #                         'label': 'edge ' + str(sourceid) + str(targetid) 
+        #                         }
+        #                     })
+    #     return nodes + edges
 
-    # If the remove button was clicked most recently
-    elif int(btn_remove) > int(btn_add):
-            nodes = [x for x in edges if not x['data']['id'] == edgeId]
-            return nodes + edges
+    # # If the remove button was clicked most recently
+    # elif int(btn_remove) > int(btn_add):
+            # nodes = [x for x in edges if not x['data']['id'] == edgeId]
+    #         return nodes + edges
 
 #     # Neither have been clicked yet (or fallback condition)
 #     return elements
