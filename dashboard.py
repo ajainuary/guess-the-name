@@ -18,7 +18,7 @@ basic_elements = []
 nodes = []
 edges = []
 
-G=nx.Graph()
+G=nx.DiGraph()
 G.add_nodes_from(["a","b","c","d",1,2])
 G.add_edges_from([("a","c"),("c","d"), ("a",1), (1,"d"), ("a",2)])
 
@@ -145,25 +145,6 @@ app.layout = html.Div([
     html.Button('Add Edge', id='btn-add-edge', n_clicks_timestamp=0),
     html.Button('Remove Edge', id='btn-remove-edge', n_clicks_timestamp=0)
         ]),
-    # html.Div(id='placeholder1')
-    # html.Div(className='two columns', children=[
-    #         dcc.Dropdown(
-    #             id='Node1List',
-    #             options=[
-    #                 {'label': 'Sam Curran', 'value': 'SC'},
-    #                 {'label': 'Tom Curran', 'value': 'TC'},
-    #                 {'label': 'England', 'value': 'ENG'}
-    #             ],
-    #             value='ENG',
-    #             multi=False,
-    #             placeholder="Select a node"
-    #     )]),
-
-    # html.Div([
-    # html.Button('Add Node', id='btn-add-node-eng', n_clicks_timestamp=0),
-    # html.Button('Remove Node', id='btn-remove-node-eng', n_clicks_timestamp=0)
-    #     ]),
-    # html.Div(id='placeholder-eng'),
 ])
 
 
@@ -214,19 +195,19 @@ def add_delete_node(btn_add_node, btn_remove_node,btn_add_edge,btn_remove_edge,n
     elif button_id == 'btn-add-edge':
         
         edges.append({'data': {
-                            'id': str(edgeId), 
+                            'id': f'{sourceId}_{edgeId}_{targetId}', 
                             'source':str(sourceId), 
                             'target':str(targetId),
                             'label': f'{sourceId}_{edgeId}_{targetId}' 
                             }
                     })
-        print(edges)
+        # print(edges)
         return nodes + edges
 
 
     elif button_id == 'btn-remove-edge':
-        edges = [x for x in edges if not x['data']['id'] == edgeId]
-        print(edges)
+        edges = [x for x in edges if not x['data']['id'] == f'{sourceId}_{edgeId}_{targetId}']
+        # print(edges)
         return nodes + edges
     
     # Neither have been clicked yet (or fallback condition)
