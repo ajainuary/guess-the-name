@@ -7,7 +7,10 @@ import dash_html_components as html
 import networkx as nx
 import dash_cytoscape as cyto
 
-app = dash.Dash(__name__)
+
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app.title = "Guess the name"
 server = app.server
 
 # Object declaration
@@ -72,7 +75,7 @@ styles = {
 }
 
 app.layout = html.Div([
-    html.Div(className='eight columns', children=[
+    html.Div(className='sixteen columns', children=[
         cyto.Cytoscape(
             id='cytoscape',
             elements=basic_elements,
@@ -84,11 +87,11 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='NodeList',
                 options=[
-                    {'label': 'New York City', 'value': 'NYC'},
-                    {'label': 'Montreal', 'value': 'MTL'},
-                    {'label': 'San Francisco', 'value': 'SF'}
+                    {'label': 'Yusuf Pathan', 'value': 'YP'},
+                    {'label': 'Irfan Pathan', 'value': 'IP'},
+                    {'label': 'India', 'value': 'IND'}
                 ],
-                value='NYC',
+                value='IND',
                 multi=False,
                 placeholder="Select a node"
         )]),
@@ -97,19 +100,67 @@ app.layout = html.Div([
     html.Button('Add Node', id='btn-add-node', n_clicks_timestamp=0),
     html.Button('Remove Node', id='btn-remove-node', n_clicks_timestamp=0)
         ]),
-    html.Div(id='placeholder')
+    html.Div(id='placeholder'),
+
+    html.Div(className='two columns', children=[
+            dcc.Dropdown(
+                id='EdgeList',
+                options=[
+                    {'label': 'Played for', 'value': 'PLAY'},
+                    {'label': 'Son of', 'value': 'SON'},
+                    {'label': 'Brother of', 'value': 'BRO'}
+                ],
+                value='PLAY',
+                multi=False,
+                placeholder="Select property"
+        )]),
+    html.Div(className='one columns', children=[
+            dcc.Dropdown(
+                id='SourceList',
+                options=[
+                    {'label': 'Yusuf Pathan', 'value': 'YP'},
+                    {'label': 'Irfan Pathan', 'value': 'IP'},
+                    {'label': 'India', 'value': 'IND'}
+                ],
+                value='IND',
+                multi=False,
+                placeholder="Select source node"
+        )]),
+    html.Div(className='one columns', children=[
+            dcc.Dropdown(
+                id='TargetList',
+                options=[
+                    {'label': 'Yusuf Pathan', 'value': 'YP'},
+                    {'label': 'Irfan Pathan', 'value': 'IP'},
+                    {'label': 'India', 'value': 'IND'}
+                ],
+                value='IND',
+                multi=False,
+                placeholder="Select target node"
+        )]),
+
+    html.Div([
+    html.Button('Add Edge', id='btn-add-edge', n_clicks_timestamp=0),
+    html.Button('Remove Edge', id='btn-remove-edge', n_clicks_timestamp=0)
+        ]),
+    html.Div(id='placeholder1')
 ])
 
 @app.callback(Output('cytoscape', 'elements'),
               [Input('btn-add-node', 'n_clicks_timestamp'),
               Input('btn-remove-node', 'n_clicks_timestamp'),
+              Input('btn-add-node', 'n_clicks_timestamp'),
+              Input('btn-remove-node', 'n_clicks_timestamp'),
               State('NodeList', 'value'),
+              State('EdgeList', 'value'),
+              State('SourceList', 'value'),
+              State('TargetList', 'value'),
               State('cytoscape', 'elements')])
-def add_delete_node(btn_add, btn_remove, nodeId, elements):
+def add_delete_node(btn_add_node, btn_remove_node, btn_add_edge,btn_remove_edge,nodeId, edgeId,sourceid,targetid,elements):
     global nodes
     global edges
     # If the add button was clicked most recently
-    if int(btn_add) > int(btn_remove):
+    if int(btn_add_node) > int(btn_remove_node):
         nodes.append({'data': {
                                 'id': str(nodeId), 
                                 'label': 'Node ' + str(nodeId)
@@ -118,12 +169,62 @@ def add_delete_node(btn_add, btn_remove, nodeId, elements):
         return nodes + edges
 
     # If the remove button was clicked most recently
-    elif int(btn_remove) > int(btn_add):
+    elif int(btn_remove_node) > int(btn_add_node):
             nodes = [x for x in nodes if not x['data']['id'] == nodeId]
+            return nodes + edges
+    if int(btn_add_edge) > int(btn_remove_edge):
+        edges.append({'data': {
+                                'id': "edge" + str(edgeId), 
+                                'source':str(sourceid), 
+                                'target':str(targetid),
+                                'label': 'edge ' + str(sourceid) + str(targetid) 
+                                }
+                            })
+        return nodes + edges
+
+    # If the remove button was clicked most recently
+    elif int(btn_remove_edge) > int(btn_add_edge):
+            nodes = [x for x in edges if not x['data']['id'] == edgeId]
             return nodes + edges
 
     # Neither have been clicked yet (or fallback condition)
     return elements
+
+
+
+# @app.callback(Output('cytoscape', 'elements'),
+#               [Input('btn-add-edge', 'n_clicks_timestamp'),
+#               Input('btn-remove-edge', 'n_clicks_timestamp'),
+              # State('EdgeList', 'value'),
+              # State('SourceList', 'value'),
+              # State('TargetList', 'value'),
+#               State('cytoscape', 'elements')])
+# def add_delete_edge(btn_add, btn_remove, edgeId,sourceid,targetid,elements):
+#     global nodes
+#     global edges
+#     # If the add button was clicked most recently
+    if int(btn_add) > int(btn_remove):
+        # nodes.append({'data': {
+        #                         'id': str(nodeId), 
+        #                         'label': 'Node ' + str(nodeId)
+        #                         } 
+        #             })
+        edges.append({'data': {
+                                'id': "edge" + str(edgeId), 
+                                'source':str(sourceid), 
+                                'target':str(targetid),
+                                'label': 'edge ' + str(sourceid) + str(targetid) 
+                                }
+                            })
+        return nodes + edges
+
+    # If the remove button was clicked most recently
+    elif int(btn_remove) > int(btn_add):
+            nodes = [x for x in edges if not x['data']['id'] == edgeId]
+            return nodes + edges
+
+#     # Neither have been clicked yet (or fallback condition)
+#     return elements
 
 if __name__ == '__main__':
     app.run_server(debug=True)
