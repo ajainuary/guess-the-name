@@ -12,30 +12,45 @@ server = app.server
 
 # Object declaration
 basic_elements = []
+nodes = []
+edges = []
 
 G=nx.Graph()
 G.add_nodes_from(["a","b","c","d",1,2])
 G.add_edges_from([("a","c"),("c","d"), ("a",1), (1,"d"), ("a",2)])
-pos = nx.layout.spring_layout(G)
 
-for node in G.nodes:
-    G.nodes[node]['pos'] = list(pos[node])
+graph_stylesheet = [
+    {
+        'selector': 'node',
+        'style': {
+            'background-color': '#BFD7B5',
+            'label': 'data(label)',
+            'width': "30%",
+            'height': "50%"
+        }
+    },
+    {
+        "selector": 'edge',
+        "style": {
+            "target-arrow-color": "#C5D3E2",
+            "target-arrow-shape": "triangle",
+            "line-color": "#C5D3E2",
+            'arrow-scale': 2,
+            'curve-style': 'bezier' #Default curve-If it is style, the arrow will not be displayed, so specify it
+        }
+    }
+]
 
 for node in G.nodes():
-    basic_elements.append({'data': {
-                                'id': str(node), 
-                                'label': 'Node ' + str(node),
-                                'visible': False
-                                }, 
-                            'position': {
-                                'x': G.nodes[node]['pos'][0], 
-                                'y': G.nodes[node]['pos'][1]
-                                }
-                        })
+    nodes.append({'data': {
+                            'id': str(node), 
+                            'label': 'Node ' + str(node)
+                        }
+                    })
 
 index = 0
 for edge in G.edges():
-    basic_elements.append({'data': {
+    edges.append({'data': {
                                 'id': "edge" + str(index), 
                                 'source':str(edge[0]), 
                                 'target':str(edge[1]),
@@ -43,6 +58,9 @@ for edge in G.edges():
                                 }
                             })
     index += 1
+
+basic_elements = nodes
+basic_elements.extend(edges)
 
 styles = {
     'json-output': {
@@ -58,10 +76,7 @@ app.layout = html.Div([
         cyto.Cytoscape(
             id='cytoscape',
             elements=basic_elements,
-            style={
-                'height': '500px',
-                'width': '500px'
-            }
+            stylesheet=graph_stylesheet,
         )
     ]),
 
@@ -82,149 +97,33 @@ app.layout = html.Div([
     html.Button('Add Node', id='btn-add-node', n_clicks_timestamp=0),
     html.Button('Remove Node', id='btn-remove-node', n_clicks_timestamp=0)
         ]),
-
-
-    # html.Div(className='four columns', children=[
-    #     dcc.Tabs(id='tabs', children=[
-    #         dcc.Tab(label='Tap Objects', children=[
-    #             html.Div(style=styles['tab'], children=[
-    #                 html.P('Node Object JSON:'),
-    #                 html.Pre(
-    #                     id='tap-node-json-output',
-    #                     style=styles['json-output']
-    #                 ),
-    #                 html.P('Edge Object JSON:'),
-    #                 html.Pre(
-    #                     id='tap-edge-json-output',
-    #                     style=styles['json-output']
-    #                 )
-    #             ])
-    #         ]),
-
-    #         dcc.Tab(label='Tap Data', children=[
-    #             html.Div(style=styles['tab'], children=[
-    #                 html.P('Node Data JSON:'),
-    #                 html.Pre(
-    #                     id='tap-node-data-json-output',
-    #                     style=styles['json-output']
-    #                 ),
-    #                 html.P('Edge Data JSON:'),
-    #                 html.Pre(
-    #                     id='tap-edge-data-json-output',
-    #                     style=styles['json-output']
-    #                 )
-    #             ])
-    #         ]),
-
-    #         dcc.Tab(label='Mouseover Data', children=[
-    #             html.Div(style=styles['tab'], children=[
-    #                 html.P('Node Data JSON:'),
-    #                 html.Pre(
-    #                     id='mouseover-node-data-json-output',
-    #                     style=styles['json-output']
-    #                 ),
-    #                 html.P('Edge Data JSON:'),
-    #                 html.Pre(
-    #                     id='mouseover-edge-data-json-output',
-    #                     style=styles['json-output']
-    #                 )
-    #             ])
-    #         ]),
-    #         dcc.Tab(label='Selected Data', children=[
-    #             html.Div(style=styles['tab'], children=[
-    #                 html.P('Node Data JSON:'),
-    #                 html.Pre(
-    #                     id='selected-node-data-json-output',
-    #                     style=styles['json-output']
-    #                 ),
-    #                 html.P('Edge Data JSON:'),
-    #                 html.Pre(
-    #                     id='selected-edge-data-json-output',
-    #                     style=styles['json-output']
-    #                 )
-    #             ])
-    #         ])
-    #     ]),
-    # ]),
-
     html.Div(id='placeholder')
 ])
 
 @app.callback(Output('cytoscape', 'elements'),
               [Input('btn-add-node', 'n_clicks_timestamp'),
               Input('btn-remove-node', 'n_clicks_timestamp'),
-              Input('NodeList', 'value'),
+              State('NodeList', 'value'),
               State('cytoscape', 'elements')])
-def update_elements(btn_add, btn_remove, nodeId, elements):
+def add_delete_node(btn_add, btn_remove, nodeId, elements):
+    global nodes
+    global edges
     # If the add button was clicked most recently
     if int(btn_add) > int(btn_remove):
-        # As long as we have not reached the max number of nodes, we add them
-        # to the cytoscape elements
-        return elements + [{'data': {
+        nodes.append({'data': {
                                 'id': str(nodeId), 
                                 'label': 'Node ' + str(nodeId)
                                 } 
-                            # 'position': {
-                            #     'x': G.nodes[node]['pos'][0], 
-                            #     'y': G.nodes[node]['pos'][1]
-                            #     }
-                        }]
+                    })
+        return nodes + edges
 
     # If the remove button was clicked most recently
     elif int(btn_remove) > int(btn_add):
-            return elements[:-1]
+            nodes = [x for x in nodes if not x['data']['id'] == nodeId]
+            return nodes + edges
 
     # Neither have been clicked yet (or fallback condition)
     return elements
-
-
-# @app.callback(Output('tap-node-json-output', 'children'),
-#               [Input('cytoscape', 'tapNode')])
-# def displayTapNode(data):
-#     return json.dumps(data, indent=2)
-
-
-# @app.callback(Output('tap-edge-json-output', 'children'),
-#               [Input('cytoscape', 'tapEdge')])
-# def displayTapEdge(data):
-#     return json.dumps(data, indent=2)
-
-
-# @app.callback(Output('tap-node-data-json-output', 'children'),
-#               [Input('cytoscape', 'tapNodeData')])
-# def displayTapNodeData(data):
-#     return json.dumps(data, indent=2)
-
-
-# @app.callback(Output('tap-edge-data-json-output', 'children'),
-#               [Input('cytoscape', 'tapEdgeData')])
-# def displayTapEdgeData(data):
-#     return json.dumps(data, indent=2)
-
-
-# @app.callback(Output('mouseover-node-data-json-output', 'children'),
-#               [Input('cytoscape', 'mouseoverNodeData')])
-# def displayMouseoverNodeData(data):
-#     return json.dumps(data, indent=2)
-
-
-# @app.callback(Output('mouseover-edge-data-json-output', 'children'),
-#               [Input('cytoscape', 'mouseoverEdgeData')])
-# def displayMouseoverEdgeData(data):
-#     return json.dumps(data, indent=2)
-
-
-# @app.callback(Output('selected-node-data-json-output', 'children'),
-#               [Input('cytoscape', 'selectedNodeData')])
-# def displaySelectedNodeData(data):
-#     return json.dumps(data, indent=2)
-
-
-# @app.callback(Output('selected-edge-data-json-output', 'children'),
-#               [Input('cytoscape', 'selectedEdgeData')])
-# def displaySelectedEdgeData(data):
-#     return json.dumps(data, indent=2)
-
 
 if __name__ == '__main__':
     app.run_server(debug=True)
