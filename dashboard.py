@@ -28,20 +28,35 @@ graph_stylesheet = [
         'style': {
             'background-color': '#BFD7B5',
             'label': 'data(label)',
-            'width': "30%",
-            'height': "50%"
+            'width': "20%",
+            'height': "20%"
         }
     },
     {
         "selector": 'edge',
         "style": {
             "target-arrow-color": "#C5D3E2",
+            'label':'data(label)',
             "target-arrow-shape": "triangle",
             "line-color": "#C5D3E2",
-            'arrow-scale': 2,
+            'arrow-scale': 1,
+            'label_font_size': '1em',
+            # 'width':100,
             'curve-style': 'bezier' #Default curve-If it is style, the arrow will not be displayed, so specify it
         }
-    }
+    },
+        {"selector":'cytoscape',
+        "style":{
+                # 'height': '95vh',
+                'align-content': 'center',
+                }
+            },
+        {"selector":"container",
+        "style":{
+            'position': 'fixed',
+            'display': 'flex',
+            'flex-direction': 'column',
+      }}
 ]
 
 for node in G.nodes():
@@ -62,8 +77,17 @@ for edge in G.edges():
                             })
     index += 1
 
+
+all_nodes = [{'label': 'Yusuf Pathan', 'value': 'YP'},{'label': 'Irfan Pathan', 'value': 'IP'},\
+            {'label': 'India', 'value': 'IND'},{'label': 'Biryani','value':'BIR'}]
+all_properties = [{'label': 'Played for', 'value': 'PLAY'},{'label': 'Son of', 'value': 'SON'},\
+                    {'label': 'Brother of', 'value': 'BRO'},{'label':'Favourite Food','value':'FOOD'}]
+
+
+
 basic_elements = nodes
 basic_elements.extend(edges)
+
 
 styles = {
     'json-output': {
@@ -74,24 +98,26 @@ styles = {
     'tab': {'height': 'calc(98vh - 115px)'}
 }
 
-app.layout = html.Div([
-    html.Div(className='sixteen columns', children=[
-        cyto.Cytoscape(
-            id='cytoscape',
-            elements=basic_elements,
-            stylesheet=graph_stylesheet,
-        )
-    ]),
+app.layout = html.Div(className="container",children=[
+    html.Div([html.H1("Guess the Name")],
+             className="row",
+             style={'textAlign': "center"}),
 
+    html.Div(className='row',children=[
+        html.Div(className='eight columns', children=[
+            cyto.Cytoscape(
+                id='cytoscape',
+                elements=basic_elements,
+                layout={'name':'cose'},
+                stylesheet=graph_stylesheet,
+            )
+            ]),
+    ]),
     html.Div(className='two columns', children=[
             dcc.Dropdown(
                 id='NodeList',
-                options=[
-                    {'label': 'Yusuf Pathan', 'value': 'YP'},
-                    {'label': 'Irfan Pathan', 'value': 'IP'},
-                    {'label': 'India', 'value': 'IND'}
-                ],
-                value='IND',
+                options=all_nodes,
+                # value=all_nodes[0]['value'],
                 multi=False,
                 placeholder="Select a node"
         )]),
@@ -105,12 +131,8 @@ app.layout = html.Div([
     html.Div(className='two columns', children=[
             dcc.Dropdown(
                 id='SourceList',
-                options=[
-                    {'label': 'Yusuf Pathan', 'value': 'YP'},
-                    {'label': 'Irfan Pathan', 'value': 'IP'},
-                    {'label': 'India', 'value': 'IND'}
-                ],
-                value='IND',
+                options=all_nodes,
+                # value=all_nodes[0]['value'],
                 multi=False,
                 placeholder="Select source node"
         )]),
@@ -118,12 +140,8 @@ app.layout = html.Div([
     html.Div(className='two columns', children=[
             dcc.Dropdown(
                 id='EdgeList',
-                options=[
-                    {'label': 'Played for', 'value': 'PLAY'},
-                    {'label': 'Son of', 'value': 'SON'},
-                    {'label': 'Brother of', 'value': 'BRO'}
-                ],
-                value='PLAY',
+                options=all_properties,
+                # value=all_properties[0]['value'],
                 multi=False,
                 placeholder="Select property"
         )]),
@@ -131,12 +149,8 @@ app.layout = html.Div([
     html.Div(className='two columns', children=[
             dcc.Dropdown(
                 id='TargetList',
-                options=[
-                    {'label': 'Yusuf Pathan', 'value': 'YP'},
-                    {'label': 'Irfan Pathan', 'value': 'IP'},
-                    {'label': 'India', 'value': 'IND'}
-                ],
-                value='IND',
+                options=all_nodes,
+                # value=all_nodes[0]['value'],
                 multi=False,
                 placeholder="Select target node"
         )]),
@@ -144,6 +158,10 @@ app.layout = html.Div([
     html.Div([
     html.Button('Add Edge', id='btn-add-edge', n_clicks_timestamp=0),
     html.Button('Remove Edge', id='btn-remove-edge', n_clicks_timestamp=0)
+        ]),
+    html.Div([
+    html.Button('Reset', id='btn-reset', n_clicks_timestamp=0),
+    # html.Button('Remove Edge', id='btn-remove-edge', n_clicks_timestamp=0)
         ]),
 ])
 
@@ -158,7 +176,8 @@ app.layout = html.Div([
               State('SourceList', 'value'),
               State('TargetList', 'value')
               ])
-def add_delete_node(btn_add_node, btn_remove_node,btn_add_edge,btn_remove_edge,nodeId,edgeId,sourceId,targetId):
+def add_delete_node(btn_add_node, btn_remove_node,btn_add_edge,btn_remove_edge,\
+                    nodeId,edgeId,sourceId,targetId):
     global nodes
     global edges
 
@@ -175,8 +194,8 @@ def add_delete_node(btn_add_node, btn_remove_node,btn_add_edge,btn_remove_edge,n
     }, indent=2)
     # print(ctx_msg)
     # If the add button was clicked most recently
-    if button_id == 'btn-add-edge':
-        print(edgeId,sourceId,targetId)
+    # if button_id == 'btn-add-edge':
+    #     print(edgeId,sourceId,targetId)
     if button_id == 'btn-add-node':
         print("Node Added")
         nodes.append({'data': {
@@ -194,11 +213,12 @@ def add_delete_node(btn_add_node, btn_remove_node,btn_add_edge,btn_remove_edge,n
     # if int(btn_add_edge) > int(btn_remove_edge):
     elif button_id == 'btn-add-edge':
         
+        edge_name = f'{sourceId}_{edgeId}_{targetId}'    
         edges.append({'data': {
-                            'id': f'{sourceId}_{edgeId}_{targetId}', 
+                            'id': edge_name, 
                             'source':str(sourceId), 
                             'target':str(targetId),
-                            'label': f'{sourceId}_{edgeId}_{targetId}' 
+                            'label': edge_name 
                             }
                     })
         # print(edges)
@@ -207,42 +227,99 @@ def add_delete_node(btn_add_node, btn_remove_node,btn_add_edge,btn_remove_edge,n
 
     elif button_id == 'btn-remove-edge':
         edges = [x for x in edges if not x['data']['id'] == f'{sourceId}_{edgeId}_{targetId}']
-        # print(edges)
         return nodes + edges
     
     # Neither have been clicked yet (or fallback condition)
     return nodes+edges
 
+@app.callback(Output('cytoscape', 'stylesheet'),
+              Input('cytoscape', 'tapNode'),
+              Input('btn-reset', 'n_clicks_timestamp'),
+               )
+def generate_stylesheet(node,btn_reset):
+    if not node:
+        return graph_stylesheet
+    ctx = dash.callback_context
+    if ctx.triggered:
+        button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+        if button_id == 'btn-reset':
+            return graph_stylesheet
 
-# @app.callback(Output('cytoscape', 'elements'),
-#               [Input('btn-add-edge', 'n_clicks_timestamp'),
-#               Input('btn-remove-edge', 'n_clicks_timestamp'),
-              # State('EdgeList', 'value'),
-              # State('SourceList', 'value'),
-              # State('TargetList', 'value'),
-#               State('cytoscape', 'elements')])
-# def add_delete_edge(btn_add, btn_remove, edgeId,sourceid,targetid,elements):
-#     global nodes
-#     global edges
-#     # If the add button was clicked most recently
-    # if int(btn_add) > int(btn_remove):
-       
-        # edges.append({'data': {
-        #                         'id': "edge" + str(edgeId), 
-        #                         'source':str(sourceid), 
-        #                         'target':str(targetid),
-        #                         'label': 'edge ' + str(sourceid) + str(targetid) 
-        #                         }
-        #                     })
-    #     return nodes + edges
+    follower_color = "red"
+    following_color = "blue"
+    stylesheet = [{
+        "selector": 'node',
+        'style': {
+            'opacity': 0.3,
+            # 'shape': node_shape
+        }
+    }, {
+        'selector': 'edge',
+        'style': {
+            'opacity': 0.2,
+            "curve-style": "bezier",
+        }
+    }, {
+        "selector": 'node[id = "{}"]'.format(node['data']['id']),
+        "style": {
+            'background-color': '#B10DC9',
+            "border-color": "purple",
+            "border-width": 2,
+            "border-opacity": 1,
+            "opacity": 1,
 
-    # # If the remove button was clicked most recently
-    # elif int(btn_remove) > int(btn_add):
-            # nodes = [x for x in edges if not x['data']['id'] == edgeId]
-    #         return nodes + edges
+            "label": "data(label)",
+            "color": "#B10DC9",
+            "text-opacity": 1,
+            "font-size": 12,
+            'z-index': 9999
+        }
+    }]
 
-#     # Neither have been clicked yet (or fallback condition)
-#     return elements
+    for edge in node['edgesData']:
+        if edge['source'] == node['data']['id']:
+            stylesheet.append({
+                "selector": 'node[id = "{}"]'.format(edge['target']),
+                "style": {
+                    'background-color': following_color,
+                    'opacity': 0.9
+                }
+            })
+            stylesheet.append({
+                "selector": 'edge[id= "{}"]'.format(edge['id']),
+                "style": {
+                    "mid-target-arrow-color": following_color,
+                    "mid-target-arrow-shape": "vee",
+                    "line-color": following_color,
+                    'opacity': 0.9,
+                    'z-index': 5000
+                }
+            })
+
+        if edge['target'] == node['data']['id']:
+            stylesheet.append({
+                "selector": 'node[id = "{}"]'.format(edge['source']),
+                "style": {
+                    'background-color': follower_color,
+                    'opacity': 0.9,
+                    'z-index': 9999
+                }
+            })
+            stylesheet.append({
+                "selector": 'edge[id= "{}"]'.format(edge['id']),
+                "style": {
+                    "mid-target-arrow-color": follower_color,
+                    "mid-target-arrow-shape": "vee",
+                    "line-color": follower_color,
+                    'opacity': 1,
+                    'z-index': 5000
+                }
+            })
+
+    return stylesheet
+
+
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
