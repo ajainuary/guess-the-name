@@ -27,9 +27,10 @@ graph_stylesheet = [
         'selector': 'node',
         'style': {
             'background-color': '#BFD7B5',
-            'label': 'data(label)',
+            'label': 'data(id)',
             'width': "20%",
-            'height': "20%"
+            'height': "20%",
+            'font-size': '0.5em'
         }
     },
     {
@@ -40,7 +41,7 @@ graph_stylesheet = [
             "target-arrow-shape": "triangle",
             "line-color": "#C5D3E2",
             'arrow-scale': 1,
-            'label_font_size': '1em',
+            'font-size': '0.5em',
             # 'width':100,
             'curve-style': 'bezier' #Default curve-If it is style, the arrow will not be displayed, so specify it
         }
@@ -80,15 +81,15 @@ for edge in G.edges():
     index += 1
 
 
-all_nodes = [{'label': 'Yusuf Pathan', 'value': 'YP'},{'label': 'Irfan Pathan', 'value': 'IP'},\
-            {'label': 'India', 'value': 'IND'},{'label': 'Biryani','value':'BIR'}]
-all_properties = [{'label': 'Played for', 'value': 'PLAY'},{'label': 'Son of', 'value': 'SON'},\
-                    {'label': 'Brother of', 'value': 'BRO'},{'label':'Favourite Food','value':'FOOD'}]
+all_nodes = [{'label': 'Yusuf Pathan', 'value': 'Yusuf Pathan'},{'label': 'Irfan Pathan', 'value': 'Irfan Pathan'},\
+            {'label': 'India', 'value': 'India'},{'label': 'Biryani','value':'Biryani'}]
+all_properties = [{'label': 'Played for', 'value': 'Played for'},{'label': 'Son of', 'value': 'Son of'},\
+                    {'label': 'Brother of', 'value': 'Brother of'},{'label':'Favourite Food','value':'Favourite Food'}]
 
-all_wiki_properties = [{'label': 'Played for', 'value': 'PLAY'},{'label': 'Son of', 'value': 'SON'},\
-                    {'label': 'Brother of', 'value': 'BRO'},{'label':'Favourite Food','value':'FOOD'},
-                    {'label':'Favourite Player','value':'FAVP'},{'label':'Bowling Style','value':'BOWL'},
-                    {'label':'Coach of','value':'COACH'}]
+all_wiki_properties = [{'label': 'Played for', 'value': 'Played for'},{'label': 'Son of', 'value': 'Son of'},\
+                    {'label': 'Brother of', 'value': 'Brother of'},{'label':'Favourite Food','value':'Favourite Food'},
+                    {'label':'Favourite Player','value':'Favourite Player'},{'label':'Bowling Style','value':'Bowling Style'},
+                    {'label':'Coach of','value':'Coach of'}]
 
 
 
@@ -105,6 +106,14 @@ styles = {
     'tab': {'height': 'calc(98vh - 115px)'}
 }
 
+# for node in nodes:
+#     if 'SUGG_NODE_' in node['data']['label']:
+#         graph_stylesheet.append({
+#                     "selector": 'node[id = "{}"]'.format(node['data']['id']),
+#                     "style": {
+#                         'background-color': "#FF69B4",
+#                     }
+#                 })
 
 
 app.layout = html.Div(className="container",children=[
@@ -191,11 +200,11 @@ app.layout = html.Div(className="container",children=[
 
 
 @app.callback(Output('cytoscape', 'elements'),
-              [Input('btn-add-node', 'n_clicks_timestamp'),
-              Input('btn-remove-node', 'n_clicks_timestamp'),
-              Input('btn-add-edge', 'n_clicks_timestamp'),
-              Input('btn-remove-edge', 'n_clicks_timestamp'),
-              Input('btn-new-sugg', 'n_clicks_timestamp'),
+              [Input('btn-add-node', 'n_clicks'),
+              Input('btn-remove-node', 'n_clicks'),
+              Input('btn-add-edge', 'n_clicks'),
+              Input('btn-remove-edge', 'n_clicks'),
+              Input('btn-new-sugg', 'n_clicks'),
               State('NodeList', 'value'),
               State('EdgeList', 'value'),
               State('SourceList', 'value'),
@@ -227,7 +236,7 @@ def add_delete_node(btn_add_node, btn_remove_node,btn_add_edge,btn_remove_edge,b
         print("Node Added")
         nodes.append({'data': {
                                 'id': str(nodeId), 
-                                'label': 'Node ' + str(nodeId)
+                                'label': str(nodeId),
                                 } 
                     })
         return nodes + edges
@@ -245,7 +254,8 @@ def add_delete_node(btn_add_node, btn_remove_node,btn_add_edge,btn_remove_edge,b
                             'id': edge_name, 
                             'source':str(sourceId), 
                             'target':str(targetId),
-                            'label': edge_name 
+                            'label': str(edgeId)
+
                             }
                     })
         # print(edges)
@@ -270,27 +280,34 @@ def add_delete_node(btn_add_node, btn_remove_node,btn_add_edge,btn_remove_edge,b
                             'id': edge_name, 
                             'source':str(newSourceId), 
                             'target':str(newTargetId),
-                            'label': edge_name 
+                            'label': str(newEdgeId)
                             }
                     }
-        nodes.append(source_node)
-        nodes.append(target_node)
+        
+        
         edges.append(prop_edge)
 
-        graph_stylesheet.append({
-                "selector": 'node[id = "{}"]'.format(newSourceId),
-                "style": {
-                    'background-color': "#FF69B4",
-                    # 'opacity': 0.9
-                }
-            })
-        graph_stylesheet.append({
-                "selector": 'node[id = "{}"]'.format(newTargetId),
-                "style": {
-                    'background-color': "#FF69B4",
-                    # 'opacity': 0.9
-                }
-            })
+        exists = [x for x in nodes if str(newSourceId) == x['data']['id']]
+        print(str(newSourceId),exists)
+        if len(exists) == 0: 
+            nodes.append(source_node)
+            graph_stylesheet.append({
+                    "selector": 'node[id = "{}"]'.format(newSourceId),
+                    "style": {
+                        'background-color': "#FF69B4",
+                        # 'opacity': 0.9
+                    }
+                })
+        exists = [x for x in nodes if str(newTargetId) == x['data']['id']]
+        if len(exists) == 0:
+            nodes.append(target_node)
+            graph_stylesheet.append({
+                    "selector": 'node[id = "{}"]'.format(newTargetId),
+                    "style": {
+                        'background-color': "#FF69B4",
+                        # 'opacity': 0.9
+                    }
+                })
 
         return nodes+edges
 
@@ -298,9 +315,9 @@ def add_delete_node(btn_add_node, btn_remove_node,btn_add_edge,btn_remove_edge,b
 
 @app.callback(Output('cytoscape', 'stylesheet'),
               Input('cytoscape', 'tapNode'),
-              Input('btn-reset', 'n_clicks_timestamp'),
-              Input('btn-new-sugg','n_clicks_timestamp')
-               )
+              Input('btn-reset', 'n_clicks'),
+              Input('btn-new-sugg','n_clicks')
+                )
 def generate_stylesheet(inp_node,btn_reset,btn_new_sugg):
     global nodes
     if not inp_node:
@@ -310,9 +327,8 @@ def generate_stylesheet(inp_node,btn_reset,btn_new_sugg):
         button_id = ctx.triggered[0]['prop_id'].split('.')[0]
         if button_id == 'btn-reset':
             return graph_stylesheet
-        # elif button_id == 'btn-new-sugg':
-            
-        #         return graph_stylesheet
+        elif button_id == 'btn-new-sugg':
+            return graph_stylesheet
 
     follower_color = "red"
     following_color = "blue"
@@ -337,7 +353,7 @@ def generate_stylesheet(inp_node,btn_reset,btn_new_sugg):
             "border-opacity": 1,
             "opacity": 1,
 
-            "label": "data(label)",
+            "label": "data(id)",
             "color": "#B10DC9",
             "text-opacity": 1,
             "font-size": 12,
@@ -386,6 +402,7 @@ def generate_stylesheet(inp_node,btn_reset,btn_new_sugg):
             })
 
     return stylesheet
+
 
 
 
