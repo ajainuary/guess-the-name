@@ -57,9 +57,9 @@ CONSTRUCT {
   ?property1 rdfs:label ?property1Label.
   ?field1 rdfs:label ?field1Label.
 
-  ?field1 ?predicate2 ?field2.
-  ?property2 rdfs:label ?property2Label.
-  ?field2 rdfs:label ?field2Label.
+#   ?field1 ?predicate2 ?field2.
+#   ?property2 rdfs:label ?property2Label.
+#   ?field2 rdfs:label ?field2Label.
 }
 WHERE {
   VALUES (?item) {(wd:''' + item + ''')}
@@ -68,17 +68,17 @@ WHERE {
   ?property wikibase:directClaim ?predicate.
   ?property rdfs:label ?propertyLabel.  filter(lang(?propertyLabel) = "hi").
   ?field rdfs:label ?fieldLabel.  filter(lang(?fieldLabel) = "hi").
-  
+
   ?field ?predicate1 ?field1.
   ?property1 wikibase:directClaim ?predicate1.
   ?property1 rdfs:label ?property1Label. filter(lang(?property1Label) = "hi").
   ?field1 rdfs:label ?field1Label. filter(lang(?field1Label) = "hi").
 
-  ?field1 ?predicate2 ?field2.
-  ?property2 wikibase:directClaim ?predicate2.
-  ?property2 rdfs:label ?property2Label. filter(lang(?property2Label) = "hi").
-  ?field2 rdfs:label ?field2Label. filter(lang(?field2Label) = "hi").
-  
+#   ?field1 ?predicate2 ?field2.
+#   ?property2 wikibase:directClaim ?predicate2.
+#   ?property2 rdfs:label ?property2Label. filter(lang(?property2Label) = "hi").
+#   ?field2 rdfs:label ?field2Label. filter(lang(?field2Label) = "hi").
+
   SERVICE wikibase:label { bd:serviceParam wikibase:language "hi". }
 }
 '''
@@ -166,15 +166,51 @@ for x in ans:
 #         print(x.object("P31"))
 
 print("\n \n Printing Sampled Graph")
-g.sample_graph()
-for x in ans:
-    print(x.qid, x.label[0])
+# g.sample_graph()
+# for x in g.sampledGraph.nodes():
+#     print(x.qid, x.label[0])
 
 print("\n\n")
 dbfile = open('pickleGraph', 'ab')
 pickle.dump(g, dbfile)
 dbfile.close()
 
+
+def sample_graph(g):
+    result = g.rdfGraph.query("""
+        CONSTRUCT {
+            ?item1 ?p1 ?item.
+            ?item rdfs:label ?itemLabel.
+            ?item1 rdfs:label ?item1Label.
+        }
+        WHERE
+        {
+            Values (?category) {(wd:Q5) (wd:Q3624078) (wd:Q515)}
+            ?item wdt:P31 ?category.
+
+            ?item1 ?p1 ?item.
+            ?item1 wdt:P31 ?category.
+
+            ?item rdfs:label ?itemLabel.
+            ?item1 rdfs:label ?item1Label.
+
+        }
+        """)
+    sampledGraph = rdflib.Graph()
+    sampledGraph.bind("wd", rdflib.term.URIRef(
+        'http://www.wikidata.org/entity/'))
+    for row in result:
+        sampledGraph.add(row)
+    return Graph(sampledGraph)
+
+
 dbfile2 = open('sampleGraph', 'ab')
-pickle.dump(g.sampledGraph, dbfile2)
+x = sample_graph(g)
+print(x)
+pickle.dump(x, dbfile2)
 dbfile2.close()
+
+dbfile3 = open('sampleGraph', 'rb')
+g = pickle.load(dbfile3)
+print(g)
+dbfile3.close()

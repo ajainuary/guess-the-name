@@ -56,8 +56,9 @@ graph_stylesheet = [
 
 
 def get_nodes(graph):
+    print(graph)
     entities = graph.nodes()
-    return list(map(lambda e: {'label': e.label, 'value': e.label}, entities))
+    return list(map(lambda e: {'label': e.label[0], 'value': e.label[0]}, entities))
 
 
 def get_properties(graph):
@@ -68,6 +69,12 @@ def get_properties(graph):
     return ans
 
 
+def get_nodes_display(graph):
+    print(graph)
+    entities = graph.nodes()
+    return list(map(lambda e: {'data': {'label': e.label[0], 'id': e.label[0]}}, entities))
+
+
 dbfile = open('pickleGraph', 'rb')
 g = pickle.load(dbfile)
 all_nodes = get_nodes(g)
@@ -75,12 +82,14 @@ all_properties = get_properties(g)
 dbfile.close()
 
 all_wiki_properties = get_properties(g)
+print(all_nodes)
 
-
-dbfile2 = open('sampleGraph', 'rb')
-sg = pickle.load(dbfile2)
-basic_elements = get_nodes(sg)
-basic_elements.extend(get_properties(sg))
+# dbfile2 = open('sampleGraph', 'rb')
+# sg = pickle.load(dbfile2)
+# print(sg)
+basic_elements = get_nodes_display(g)
+print(basic_elements)
+# basic_elements.extend(all_properties)
 
 
 styles = {
