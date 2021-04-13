@@ -6,8 +6,8 @@ import dash_core_components as dcc
 import dash_html_components as html
 import networkx as nx
 import dash_cytoscape as cyto
-
-
+import pickle
+from wrapper import Entity, Graph
 
 # Object declaration
 basic_elements = []
@@ -30,44 +30,57 @@ graph_stylesheet = [
         "selector": 'edge',
         "style": {
             "target-arrow-color": "#C5D3E2",
-            'label':'data(label)',
+            'label': 'data(label)',
             "target-arrow-shape": "triangle",
             "line-color": "#C5D3E2",
             'arrow-scale': 1,
             'font-size': '0.5em',
             # 'width':100,
-            'curve-style': 'bezier' #Default curve-If it is style, the arrow will not be displayed, so specify it
+            # Default curve-If it is style, the arrow will not be displayed, so specify it
+            'curve-style': 'bezier'
         }
     },
-        {"selector":'cytoscape',
-        "style":{
-                # 'height': '95vh',
-                'align-content': 'center',
-                }
-            },
-        {"selector":"container",
-        "style":{
-            'position': 'fixed',
-            'display': 'flex',
-            'flex-direction': 'column',
-      }}
+    {"selector": 'cytoscape',
+     "style": {
+         # 'height': '95vh',
+         'align-content': 'center',
+     }
+     },
+    {"selector": "container",
+     "style": {
+         'position': 'fixed',
+         'display': 'flex',
+         'flex-direction': 'column',
+     }}
 ]
 
 
-all_nodes = [{'label': 'Yusuf Pathan', 'value': 'Yusuf Pathan'},{'label': 'Irfan Pathan', 'value': 'Irfan Pathan'},\
-            {'label': 'India', 'value': 'India'},{'label': 'Biryani','value':'Biryani'}]
-all_properties = [{'label': 'Played for', 'value': 'Played for'},{'label': 'Son of', 'value': 'Son of'},\
-                    {'label': 'Brother of', 'value': 'Brother of'},{'label':'Favourite Food','value':'Favourite Food'}]
-
-all_wiki_properties = [{'label': 'Played for', 'value': 'Played for'},{'label': 'Son of', 'value': 'Son of'},\
-                    {'label': 'Brother of', 'value': 'Brother of'},{'label':'Favourite Food','value':'Favourite Food'},
-                    {'label':'Favourite Player','value':'Favourite Player'},{'label':'Bowling Style','value':'Bowling Style'},
-                    {'label':'Coach of','value':'Coach of'}]
+def get_nodes(graph):
+    entities = graph.nodes()
+    return list(map(lambda e: {'label': e.label, 'value': e.label}, entities))
 
 
+def get_properties(graph):
+    ans = []
+    for e in graph.nodes():
+        props = e.properties()
+        ans.extend(list(map(lambda p: {'label': p, 'value': p}, props)))
+    return ans
 
-basic_elements = nodes
-basic_elements.extend(edges)
+
+dbfile = open('pickleGraph', 'rb')
+g = pickle.load(dbfile)
+all_nodes = get_nodes(g)
+all_properties = get_properties(g)
+dbfile.close()
+
+all_wiki_properties = get_properties(g)
+
+
+dbfile2 = open('sampleGraph', 'rb')
+sg = pickle.load(dbfile2)
+basic_elements = get_nodes(sg)
+basic_elements.extend(get_properties(sg))
 
 
 styles = {
@@ -89,103 +102,113 @@ styles = {
 #                 })
 
 
-layout = html.Div(className="container",children=[
+layout = html.Div(className="container", children=[
     html.Div([html.H1("Guess the Name")],
              className="row",
              style={'textAlign': "center"}),
 
-    html.Div(className='row',children=[
+    html.Div(className='row', children=[
         html.Div(className='eight columns', children=[
             cyto.Cytoscape(
                 id='cytoscape',
                 elements=basic_elements,
-                layout={'name':'cose'},
+                layout={'name': 'cose'},
                 stylesheet=graph_stylesheet,
             )
-            ]),
+        ]),
     ]),
     html.Div(className='two columns', children=[
-            dcc.Dropdown(
-                id='NodeList',
-                options=all_nodes,
-                # value=all_nodes[0]['value'],
-                multi=False,
-                placeholder="Select a node"
+        dcc.Dropdown(
+            id='NodeList',
+            options=all_nodes,
+            # value=all_nodes[0]['value'],
+            multi=False,
+            placeholder="Select a node"
         )]),
 
-    html.Div(className='row',children=[
-    html.Button('Add Node', id='btn-add-node', n_clicks_timestamp=0),
-    html.Button('Remove Node', id='btn-remove-node', n_clicks_timestamp=0)
-        ]),
+    html.Div(className='row', children=[
+        html.Button('Add Node', id='btn-add-node', n_clicks_timestamp=0),
+        html.Button('Remove Node', id='btn-remove-node', n_clicks_timestamp=0)
+    ]),
     html.Div(id='placeholder'),
 
     html.Div(className='two columns', children=[
-            dcc.Dropdown(
-                id='SourceList',
-                options=all_nodes,
-                # value=all_nodes[0]['value'],
-                multi=False,
-                placeholder="Select source node"
+        dcc.Dropdown(
+            id='SourceList',
+            options=all_nodes,
+            # value=all_nodes[0]['value'],
+            multi=False,
+            placeholder="Select source node"
         )]),
 
     html.Div(className='two columns', children=[
-            dcc.Dropdown(
-                id='EdgeList',
-                options=all_properties,
-                # value=all_properties[0]['value'],
-                multi=False,
-                placeholder="Select property"
+        dcc.Dropdown(
+            id='EdgeList',
+            options=all_properties,
+            # value=all_properties[0]['value'],
+            multi=False,
+            placeholder="Select property"
         )]),
-    
+
     html.Div(className='two columns', children=[
-            dcc.Dropdown(
-                id='TargetList',
-                options=all_nodes,
-                # value=all_nodes[0]['value'],
-                multi=False,
-                placeholder="Select target node"
+        dcc.Dropdown(
+            id='TargetList',
+            options=all_nodes,
+            # value=all_nodes[0]['value'],
+            multi=False,
+            placeholder="Select target node"
         )]),
 
     html.Div([
-    html.Button('Add Edge', id='btn-add-edge', n_clicks_timestamp=0),
-    html.Button('Remove Edge', id='btn-remove-edge', n_clicks_timestamp=0)
-        ]),
+        html.Button('Add Edge', id='btn-add-edge', n_clicks_timestamp=0),
+        html.Button('Remove Edge', id='btn-remove-edge', n_clicks_timestamp=0)
+    ]),
     html.Div([
-    html.Button('Reset', id='btn-reset', n_clicks_timestamp=0),
-    # html.Button('Remove Edge', id='btn-remove-edge', n_clicks_timestamp=0)
-        ]),
-    
+        html.Button('Reset', id='btn-reset', n_clicks_timestamp=0),
+        # html.Button('Remove Edge', id='btn-remove-edge', n_clicks_timestamp=0)
+    ]),
+
     html.Div(className='eight columns', children=[
 
-        dcc.Input(id='NewSourceList', type='text', debounce=True, placeholder='Add New Source Node'),
+        dcc.Input(id='NewSourceList', type='text', debounce=True,
+                  placeholder='Add New Source Node'),
         dcc.Dropdown(
-                id='NewEdgeList',
-                options=all_wiki_properties,
-                # value=all_properties[0]['value'],
-                multi=False,
-                placeholder="Select new property"
+            id='NewEdgeList',
+            options=all_wiki_properties,
+            # value=all_properties[0]['value'],
+            multi=False,
+            placeholder="Select new property"
         ),
-        dcc.Input(id='NewTargetList', type='text', debounce=True, placeholder='Add New Target Node'),
+        dcc.Input(id='NewTargetList', type='text', debounce=True,
+                  placeholder='Add New Target Node'),
         html.Button('New Suggestion', id='btn-new-sugg', n_clicks_timestamp=0),
-        html.Button('Remove Suggestion', id='btn-del-sugg', n_clicks_timestamp=0),
-        ]),
+        html.Button('Remove Suggestion', id='btn-del-sugg',
+                    n_clicks_timestamp=0),
+    ]),
     html.A(html.Button('End Game', className='three columns'),
-    href='/'),
+           href='/'),
     html.Button('Reset All', id='btn-rt'),
-    
+
 ])
 
-def register_callbacks(dashapp,ctx):
-    @dashapp.callback(Output('cytoscape', 'elements'),[Input('btn-add-node', 'n_clicks'),
-                  Input('btn-remove-node', 'n_clicks'),Input('btn-add-edge', 'n_clicks'),
-                  Input('btn-remove-edge', 'n_clicks'),Input('btn-new-sugg', 'n_clicks'),
-                  Input('btn-del-sugg', 'n_clicks'),Input('btn-rt', 'n_clicks'),
-                  Input('NodeList', 'value'),Input('EdgeList', 'value'),Input('SourceList', 'value'),
-                  Input('TargetList', 'value'),Input('NewSourceList', 'value'),
-                  Input('NewEdgeList', 'value'),Input('NewTargetList', 'value')
-                  ])
-    def add_delete_node(btn_add_node, btn_remove_node,btn_add_edge,btn_remove_edge,btn_new_sugg,btn_del_sugg,btn_rt,\
-        nodeId,edgeId,sourceId,targetId,newSourceId,newEdgeId,newTargetId):
+
+def register_callbacks(dashapp, ctx):
+    @dashapp.callback(Output('cytoscape', 'elements'), [Input('btn-add-node', 'n_clicks'),
+                                                        Input(
+                                                            'btn-remove-node', 'n_clicks'), Input('btn-add-edge', 'n_clicks'),
+                                                        Input(
+                                                            'btn-remove-edge', 'n_clicks'), Input('btn-new-sugg', 'n_clicks'),
+                                                        Input(
+                                                            'btn-del-sugg', 'n_clicks'), Input('btn-rt', 'n_clicks'),
+                                                        Input('NodeList', 'value'), Input('EdgeList',
+                                                                                          'value'), Input('SourceList', 'value'),
+                                                        Input('TargetList', 'value'), Input(
+                                                            'NewSourceList', 'value'),
+                                                        Input('NewEdgeList', 'value'), Input(
+                                                            'NewTargetList', 'value')
+                                                        ])
+    def add_delete_node(btn_add_node, btn_remove_node, btn_add_edge, btn_remove_edge, btn_new_sugg, btn_del_sugg, btn_rt,
+                        nodeId, edgeId, sourceId, targetId, newSourceId, newEdgeId, newTargetId):
         global nodes
         global edges
 
@@ -207,10 +230,10 @@ def register_callbacks(dashapp,ctx):
         if button_id == 'btn-add-node':
             print("Node Added")
             nodes.append({'data': {
-                                    'id': str(nodeId), 
-                                    'label': str(nodeId),
-                                    } 
-                        })
+                'id': str(nodeId),
+                'label': str(nodeId),
+            }
+            })
             return nodes + edges
 
         # If the remove button was clicked most recently
@@ -220,86 +243,85 @@ def register_callbacks(dashapp,ctx):
 
         # if int(btn_add_edge) > int(btn_remove_edge):
         elif button_id == 'btn-add-edge':
-            
-            edge_name = f'{sourceId}_{edgeId}_{targetId}'    
-            edges.append({'data': {
-                                'id': edge_name, 
-                                'source':str(sourceId), 
-                                'target':str(targetId),
-                                'label': str(edgeId)
 
-                                }
-                        })
+            edge_name = f'{sourceId}_{edgeId}_{targetId}'
+            edges.append({'data': {
+                'id': edge_name,
+                'source': str(sourceId),
+                'target': str(targetId),
+                'label': str(edgeId)
+
+            }
+            })
             # print(edges)
             return nodes + edges
 
-
         elif button_id == 'btn-remove-edge':
-            edges = [x for x in edges if not x['data']['id'] == f'{sourceId}_{edgeId}_{targetId}']
+            edges = [x for x in edges if not x['data']
+                     ['id'] == f'{sourceId}_{edgeId}_{targetId}']
             return nodes + edges
-        
+
         # Neither have been clicked yet (or fallback condition)
-        
 
         elif button_id == 'btn-new-sugg':
             source_name = f'SUGG_NODE_{newSourceId}'
             target_name = f'SUGG_NODE_{newTargetId}'
             edge_name = f'SUGG_EDGE_{newSourceId}_{newEdgeId}_{newTargetId}'
 
-            source_node = {'data':{'id': newSourceId,'label': source_name}}
-            target_node = {'data':{'id': newTargetId,'label': target_name}}
+            source_node = {'data': {'id': newSourceId, 'label': source_name}}
+            target_node = {'data': {'id': newTargetId, 'label': target_name}}
             prop_edge = {'data': {
-                                'id': edge_name, 
-                                'source':str(newSourceId), 
-                                'target':str(newTargetId),
-                                'label': str(newEdgeId)
-                                }
-                        }
-            
-            
+                'id': edge_name,
+                'source': str(newSourceId),
+                'target': str(newTargetId),
+                'label': str(newEdgeId)
+            }
+            }
+
             edges.append(prop_edge)
 
             exists = [x for x in nodes if str(newSourceId) == x['data']['id']]
-            print(str(newSourceId),exists)
-            if len(exists) == 0: 
+            print(str(newSourceId), exists)
+            if len(exists) == 0:
                 nodes.append(source_node)
                 graph_stylesheet.append({
-                        "selector": 'node[id = "{}"]'.format(newSourceId),
-                        "style": {
-                            'background-color': "#FF69B4",
-                            # 'opacity': 0.9
-                        }
-                    })
+                    "selector": 'node[id = "{}"]'.format(newSourceId),
+                    "style": {
+                        'background-color': "#FF69B4",
+                        # 'opacity': 0.9
+                    }
+                })
             exists = [x for x in nodes if str(newTargetId) == x['data']['id']]
             if len(exists) == 0:
                 nodes.append(target_node)
                 graph_stylesheet.append({
-                        "selector": 'node[id = "{}"]'.format(newTargetId),
-                        "style": {
-                            'background-color': "#FF69B4",
-                            # 'opacity': 0.9
-                        }
-                    })
+                    "selector": 'node[id = "{}"]'.format(newTargetId),
+                    "style": {
+                        'background-color': "#FF69B4",
+                        # 'opacity': 0.9
+                    }
+                })
 
             return nodes+edges
 
         elif button_id == 'btn-del-sugg':
-            edges = [x for x in edges if not x['data']['id'] == f'SUGG_EDGE_{newSourceId}_{newEdgeId}_{newTargetId}']
+            edges = [x for x in edges if not x['data']['id'] ==
+                     f'SUGG_EDGE_{newSourceId}_{newEdgeId}_{newTargetId}']
             nodes = [x for x in nodes if not x['data']['id'] == newSourceId]
             nodes = [x for x in nodes if not x['data']['id'] == newTargetId]
             return nodes + edges
 
         elif button_id == 'btn-rt':
             nodes = []
-            edges = [] 
+            edges = []
 
-        return nodes+edges    
-    
+        return nodes+edges
+
     @dashapp.callback(Output('cytoscape', 'stylesheet'),
-              [Input('cytoscape', 'tapNode'),
-              Input('btn-new-sugg','n_clicks_timestamp'),
-              Input('btn-reset', 'n_clicks')])
-    def generate_stylesheet(inp_node,btn_new_sugg,btn_reset):
+                      [Input('cytoscape', 'tapNode'),
+                       Input('btn-new-sugg', 'n_clicks_timestamp'),
+                       Input('btn-reset', 'n_clicks')])
+    def generate_stylesheet(inp_node, btn_new_sugg, btn_reset):
         global nodes
         if not inp_node:
             return graph_stylesheet
@@ -383,5 +405,3 @@ def register_callbacks(dashapp,ctx):
                 })
 
         return stylesheet
-
-

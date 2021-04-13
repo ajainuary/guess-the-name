@@ -5,6 +5,7 @@ import urllib
 from rdflib import URIRef
 import random
 from wrapper import Graph, Entity
+import pickle
 
 
 def get_allnodes(g):
@@ -166,12 +167,14 @@ for x in ans:
 
 print("\n \n Printing Sampled Graph")
 g.sample_graph()
-
-subgraph = Graph(g.sampledGraph)
-ans = subgraph.nodes()
 for x in ans:
     print(x.qid, x.label[0])
 
 print("\n\n")
+dbfile = open('pickleGraph', 'ab')
+pickle.dump(g, dbfile)
+dbfile.close()
 
-
+dbfile2 = open('sampleGraph', 'ab')
+pickle.dump(g.sampledGraph, dbfile2)
+dbfile2.close()
