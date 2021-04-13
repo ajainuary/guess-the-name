@@ -62,6 +62,7 @@ class Graph:
 
     def __init__(self, rdfGraph: rdflib.Graph):
         self.rdfGraph = rdfGraph
+        self.sampledGraph = None
 
     def nodes(self):
         qres = self.rdfGraph.query("""SELECT distinct ?item
@@ -75,3 +76,30 @@ class Graph:
         for row in qres:
             ans.append(Entity(row[0][31:], self))
         return ans
+
+    def sample_graph(self):
+        result = self.rdfGraph.query("""
+        CONSTRUCT {
+            ?item1 ?p1 ?item.
+            ?item rdfs:label ?itemLabel.
+            ?item1 rdfs:label ?item1Label.
+        }
+        WHERE
+        {
+            Values (?category) {(wd:Q5) (wd:Q3624078) (wd:Q515)}
+            ?item wdt:P31 ?category.
+        
+            ?item1 ?p1 ?item.
+            ?item1 wdt:P31 ?category.
+        
+            ?item rdfs:label ?itemLabel.
+            ?item1 rdfs:label ?item1Label.
+
+        }
+        """)
+        self.sampledGraph = rdflib.Graph()
+        self.sampledGraph.bind("wd",rdflib.term.URIRef('http://www.wikidata.org/entity/'))
+        for row in result:
+            self.sampledGraph.add(row)
+
+                

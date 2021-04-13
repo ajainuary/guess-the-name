@@ -9,7 +9,7 @@ from wrapper import Graph, Entity
 
 def get_allnodes(g):
     entities = g.all_nodes()
-    print(entities)
+    # print(entities)
     return entities
 
 
@@ -140,24 +140,38 @@ edges = [{'p': rdflib.term.URIRef('http://www.w3.org/2004/02/skos/core#altLabel'
                                                                                                          datatype=rdflib.term.URIRef('http://www.w3.org/2001/XMLSchema#string')), 's': rdflib.term.URIRef('http://www.wikidata.org/entity/Q1001')},
          {'p': rdflib.term.URIRef('http://www.w3.org/2000/01/rdf-schema#label'), 'o': rdflib.term.Literal('Mahatma Gandhi', lang='lfn'), 's': rdflib.term.URIRef('http://www.wikidata.org/entity/Q1001')}]
 
-edges = classify_edges(itemGraph, edges)
-print('Existing: ' + str(len(edges['existing'])))
-print('New: ' + str(len(edges['new'])))
+# edges = classify_edges(itemGraph, edges)
+# print('Existing: ' + str(len(edges['existing'])))
+# print('New: ' + str(len(edges['new'])))
 
-score = compute_score(edges)
-print('Score: ' + str(score))
+# score = compute_score(edges)
+# print('Score: ' + str(score))
 
 for x in itemGraph.predicate_objects():
     print(x)
 print(itemGraph.toPython())
 
 g = Graph(itemGraph)
+
+print("\n \n Printing Original Graph")
 ans = g.nodes()
 for x in ans:
     print(x.qid, x.label[0])
-    props = x.properties()
-    for y in props:
-        print(y, x.object(y))
-    if x.qid == "Q1001":
-        x.add("P31", "dead person")
-        print(x.object("P31"))
+#     props = x.properties()
+#     for y in props:
+#         print(y, x.object(y))
+#     if x.qid == "Q1001":
+#         x.add("P31", "dead person")
+#         print(x.object("P31"))
+
+print("\n \n Printing Sampled Graph")
+g.sample_graph()
+
+subgraph = Graph(g.sampledGraph)
+ans = subgraph.nodes()
+for x in ans:
+    print(x.qid, x.label[0])
+
+print("\n\n")
+
+
