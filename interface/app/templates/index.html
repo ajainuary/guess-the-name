@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class ='container'>
+{% if current_user.is_anonymous %}
+  <h1>Welcome, player!</h1>
+  <h3> To play the game, create an account and login </h3>
+{% else  %}
+  <h1>Welcome, {{ current_user.username }}!</h1>
+  <button type="button" class="btn btn-outline-secondary" data-mdb-ripple-color="dark"><a href="{{ url_for('/dashboard/') }}">Play Now!</a></button>
+  <button type="button" class="btn btn-outline-warning" data-mdb-ripple-color="dark">Leaderboard</button>
+  
+{% endif %}
+</div>
+{% endblock %}

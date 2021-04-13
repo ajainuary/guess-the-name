@@ -60,7 +60,21 @@ graph_stylesheet = [
       }}
 ]
 
-
+for node in nodes:
+    if 'SUGG_NODE_' in node['data']['label']:
+        graph_stylesheet.append({
+                    "selector": 'node[id = "{}"]'.format(node['data']['id']),
+                    "style": {
+                        'background-color': "#FF69B4",
+                    }
+                })
+    else:
+        graph_stylesheet.append({
+                    "selector": 'node',
+                    "style": {
+                        'background-color': '#BFD7B5',
+                    }
+                })
 
 for node in G.nodes():
     nodes.append({'data': {
@@ -106,14 +120,7 @@ styles = {
     'tab': {'height': 'calc(98vh - 115px)'}
 }
 
-# for node in nodes:
-#     if 'SUGG_NODE_' in node['data']['label']:
-#         graph_stylesheet.append({
-#                     "selector": 'node[id = "{}"]'.format(node['data']['id']),
-#                     "style": {
-#                         'background-color': "#FF69B4",
-#                     }
-#                 })
+
 
 
 app.layout = html.Div(className="container",children=[
@@ -205,13 +212,13 @@ app.layout = html.Div(className="container",children=[
               Input('btn-add-edge', 'n_clicks'),
               Input('btn-remove-edge', 'n_clicks'),
               Input('btn-new-sugg', 'n_clicks'),
-              State('NodeList', 'value'),
-              State('EdgeList', 'value'),
-              State('SourceList', 'value'),
-              State('TargetList', 'value'),
-              State('NewSourceList', 'value'),
-              State('NewEdgeList', 'value'),
-              State('NewTargetList', 'value')
+              Input('NodeList', 'value'),
+              Input('EdgeList', 'value'),
+              Input('SourceList', 'value'),
+              Input('TargetList', 'value'),
+              Input('NewSourceList', 'value'),
+              Input('NewEdgeList', 'value'),
+              Input('NewTargetList', 'value')
               ])
 def add_delete_node(btn_add_node, btn_remove_node,btn_add_edge,btn_remove_edge,btn_new_sugg,nodeId,edgeId,sourceId,targetId,newSourceId,newEdgeId,newTargetId):
     global nodes
@@ -314,11 +321,10 @@ def add_delete_node(btn_add_node, btn_remove_node,btn_add_edge,btn_remove_edge,b
     return nodes+edges    
 
 @app.callback(Output('cytoscape', 'stylesheet'),
-              Input('cytoscape', 'tapNode'),
-              Input('btn-reset', 'n_clicks'),
-              Input('btn-new-sugg','n_clicks')
-                )
-def generate_stylesheet(inp_node,btn_reset,btn_new_sugg):
+              [Input('cytoscape', 'tapNode'),
+              Input('btn-new-sugg','n_clicks_timestamp'),
+              Input('btn-reset', 'n_clicks')])
+def generate_stylesheet(inp_node,btn_new_sugg,btn_reset):
     global nodes
     if not inp_node:
         return graph_stylesheet
@@ -356,7 +362,7 @@ def generate_stylesheet(inp_node,btn_reset,btn_new_sugg):
             "label": "data(id)",
             "color": "#B10DC9",
             "text-opacity": 1,
-            "font-size": 12,
+            "font-size": '0.5em',
             'z-index': 9999
         }
     }]
