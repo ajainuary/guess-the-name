@@ -73,6 +73,7 @@ def get_nodes_display(graph):
     entities = graph.nodes()
     return list(map(lambda e: {'data': {'id': str(e.label[0]), 'label': str(e.label[0])}}, entities))
 
+
 def get_properties_display(graph):
     print(graph)
     ans = []
@@ -87,16 +88,39 @@ def get_properties_display(graph):
             entities = [graph.get_node(v) for v in value]
             for v in entities:
                 ans.append({'data': {
-                                    'id': p, 
-                                    'source':e.qid, 
-                                    'target':v.qid,
-                                    'label': p 
-                                    }
-                                })
+                    'id': p,
+                    'source': e.qid,
+                    'target': v.qid,
+                    'label': p
+                }
+                })
 
-    
     return ans
     # return list(map(lambda e: {'data': {'id': str(e.label[0]), 'label': str(e.label[0])}}, entities))
+
+
+def wiki_exists(e1, p, e2):
+    qres = self.owner.rdfGraph.query(
+        '''
+             select ?value  
+            {
+                wd:''' + e1 + '''  wdt:''' + p + ''' ?value.
+            } 
+            '''
+    )
+    ans = [x[0][31:] if isinstance(
+        x[0], rdflib.term.URIRef) else x[0] for x in qres]
+    return e2 in ans
+
+
+def filter_edits(edges):
+    return list(filter(lambda x: x['data']['id'][:9] == "SUGG_EDGE", edges))
+
+
+def score(edges):
+    edits = filter_edits(edges)
+    reduce(lambda x, y: x+1 if y else x, map(lambda x: wiki_exists(x['data']['source'], x['data']['label'],
+                                                                   x['data']['target']), edits))
 
 
 dbfile = open('sampleGraph', 'rb')
@@ -307,7 +331,8 @@ def register_callbacks(dashapp, ctx):
         elif button_id == 'btn-new-sugg':
             source_name = 'SUGG_NODE_{}'.format(newSourceId)
             target_name = 'SUGG_NODE_{}'.format(newTargetId)
-            edge_name = 'SUGG_EDGE_{}_{}_{}'.format(newSourceId, newEdgeId, newTargetId)
+            edge_name = 'SUGG_EDGE_{}_{}_{}'.format(
+                newSourceId, newEdgeId, newTargetId)
 
             source_node = {'data': {'id': newSourceId, 'label': source_name}}
             target_node = {'data': {'id': newTargetId, 'label': target_name}}
