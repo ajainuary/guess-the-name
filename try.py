@@ -204,13 +204,13 @@ def sample_graph(g):
     return Graph(sampledGraph)
 
 
-dbfile2 = open('sampleGraph', 'ab')
+dbfile2 = open('./interface/app/dashapp1/sampleGraph', 'wb')
 x = sample_graph(g)
 print(x)
 pickle.dump(x, dbfile2)
 dbfile2.close()
 
-dbfile3 = open('sampleGraph', 'rb')
-g = pickle.load(dbfile3)
-print(g)
-dbfile3.close()
+# dbfile3 = open('./interface/app/dashapp1/originalGraph', 'wb')
+# g = pickle.load(dbfile3)
+# print(g)
+# dbfile3.close()

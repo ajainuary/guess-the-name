@@ -72,22 +72,25 @@ def get_properties(graph):
 def get_nodes_display(graph):
     print(graph)
     entities = graph.nodes()
-    return list(map(lambda e: {'data': {'label': e.label[0], 'id': e.label[0]}}, entities))
+    return list(map(lambda e: {'data': {'id': str(e.label[0]), 'label': str(e.label[0])}}, entities))
 
 
-dbfile = open('pickleGraph', 'rb')
+dbfile = open('sampleGraph', 'rb')
 g = pickle.load(dbfile)
 all_nodes = get_nodes(g)
 all_properties = get_properties(g)
 dbfile.close()
 
 all_wiki_properties = get_properties(g)
+print("Printing all nodes from sample graph")
 print(all_nodes)
 
 # dbfile2 = open('sampleGraph', 'rb')
 # sg = pickle.load(dbfile2)
 # print(sg)
-basic_elements = get_nodes_display(g)
+
+nodes = get_nodes_display(g)
+basic_elements = nodes
 print(basic_elements)
 # basic_elements.extend(all_properties)
 
@@ -253,7 +256,7 @@ def register_callbacks(dashapp, ctx):
         # if int(btn_add_edge) > int(btn_remove_edge):
         elif button_id == 'btn-add-edge':
 
-            edge_name = f'{sourceId}_{edgeId}_{targetId}'
+            edge_name = "{}_{}_{}".format(sourceId, edgeId, targetId)
             edges.append({'data': {
                 'id': edge_name,
                 'source': str(sourceId),
@@ -267,15 +270,15 @@ def register_callbacks(dashapp, ctx):
 
         elif button_id == 'btn-remove-edge':
             edges = [x for x in edges if not x['data']
-                     ['id'] == f'{sourceId}_{edgeId}_{targetId}']
+                     ['id'] == "{}_{}_{}".format(sourceId, edgeId, targetId)]
             return nodes + edges
 
         # Neither have been clicked yet (or fallback condition)
 
         elif button_id == 'btn-new-sugg':
-            source_name = f'SUGG_NODE_{newSourceId}'
-            target_name = f'SUGG_NODE_{newTargetId}'
-            edge_name = f'SUGG_EDGE_{newSourceId}_{newEdgeId}_{newTargetId}'
+            source_name = 'SUGG_NODE_{}'.format(newSourceId)
+            target_name = 'SUGG_NODE_{}'.format(newTargetId)
+            edge_name = 'SUGG_EDGE_{}_{}_{}'.format(newSourceId, newEdgeId, newTargetId)
 
             source_node = {'data': {'id': newSourceId, 'label': source_name}}
             target_node = {'data': {'id': newTargetId, 'label': target_name}}
@@ -315,7 +318,7 @@ def register_callbacks(dashapp, ctx):
 
         elif button_id == 'btn-del-sugg':
             edges = [x for x in edges if not x['data']['id'] ==
-                     f'SUGG_EDGE_{newSourceId}_{newEdgeId}_{newTargetId}']
+                     'SUGG_EDGE_{}_{}_{}'.format(newSourceId, newEdgeId, newTargetId)]
             nodes = [x for x in nodes if not x['data']['id'] == newSourceId]
             nodes = [x for x in nodes if not x['data']['id'] == newTargetId]
             return nodes + edges
