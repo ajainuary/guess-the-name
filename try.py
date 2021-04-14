@@ -90,6 +90,7 @@ result = itemGraph.parse(url)
 print('There are ', len(result), ' triples about item ', item)
 
 # for s, p, o in itemGraph.triples((None, None, None)):
+    # print("{}_{}_{}".format(s,p,o))
 #     sl = itemGraph.preferredLabel(URIRef(s), lang='hi')
 #     if not sl:
 #         sl = s
@@ -157,10 +158,11 @@ g = Graph(itemGraph)
 print("\n \n Printing Original Graph")
 ans = g.nodes()
 for x in ans:
-    print(x.qid, x.label[0])
-#     props = x.properties()
-#     for y in props:
-#         print(y, x.object(y))
+    # print(x.qid, x.label[0])
+    props , pLabel = x.properties()
+    for y in props:
+        value = x.object(y)
+        print(x.label[0], pLabel[props.index(y)][0], value[0])
 #     if x.qid == "Q1001":
 #         x.add("P31", "dead person")
 #         print(x.object("P31"))
@@ -171,7 +173,7 @@ print("\n \n Printing Sampled Graph")
 #     print(x.qid, x.label[0])
 
 print("\n\n")
-dbfile = open('pickleGraph', 'ab')
+dbfile = open('./interface/originalGraph', 'ab')
 pickle.dump(g, dbfile)
 dbfile.close()
 
@@ -201,6 +203,8 @@ def sample_graph(g):
         'http://www.wikidata.org/entity/'))
     sampledGraph.bind("wdt", rdflib.term.URIRef(
         'http://www.wikidata.org/prop/direct/'))
+    sampledGraph.bind("wikibase", rdflib.term.URIRef(
+        'http://wikiba.se/ontology#'))
     for row in result:
         sampledGraph.add(row)
     return Graph(sampledGraph)
@@ -211,7 +215,7 @@ def sample_graph(g):
 dbfile2 = open('./interface/sampleGraph', 'wb')
 x = sample_graph(g)
 print(x)
-print(x.getnode("Q1001"))
+# print(x.getnode("Q1001"))
 
 # for e in x.nodes():
 #     print(e)

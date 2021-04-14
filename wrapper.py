@@ -20,7 +20,7 @@ class Entity:
 
     def properties(self):
         qres = self.owner.rdfGraph.query(
-            ''' SELECT ?p
+            ''' SELECT DISTINCT ?p
                 WHERE 
                 {
                 wd:''' + self.qid + ''' ?p ?o.
@@ -29,8 +29,21 @@ class Entity:
                 }
             }'''
         )
+        pLabel = []
+        for p in qres:
+            qres1 = self.owner.rdfGraph.query(
+                ''' SELECT ?o
+                    WHERE 
+                    {
+                        wd:''' + p[0][36:] + ''' rdfs:label ?o.
+                    }
+                '''
+            )
+            if qres1:
+                pLabel.append([r for r in qres1][0])
+
         ans = [x[0][36:] for x in qres]
-        return ans
+        return ans, pLabel
 
     def object(self, property):
         qres = self.owner.rdfGraph.query(

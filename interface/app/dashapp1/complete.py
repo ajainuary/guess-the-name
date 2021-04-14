@@ -64,8 +64,8 @@ def get_nodes(graph):
 def get_properties(graph):
     ans = []
     for e in graph.nodes():
-        props = e.properties()
-        ans.extend(list(map(lambda p: {'label': p, 'value': p}, props)))
+        props, propsLabel = e.properties()
+        ans.extend(list(map(lambda p, pLabel: {'label': pLabel, 'value': p}, props, propsLabel)))
     return ans
 
 
@@ -81,7 +81,7 @@ def get_properties_display(graph):
     print("Printing sampled graph edges")
     for e in graph.nodes():
         print(e.qid)
-        props = e.properties()
+        props, propsLabel = e.properties()
         for p in props:
             print(p)
             value = e.object(p)
@@ -101,6 +101,9 @@ def get_properties_display(graph):
 
 
 def wiki_exists(graph, e1, p, e2):
+    print(e1)
+    print(p)
+    print(e2)
     qres = graph.rdfGraph.query(
         '''
              select ?value  
@@ -119,26 +122,28 @@ def filter_edits(edges):
 
 
 def score(graph, edges):
-    edits = filter_edits(edges)
-    return reduce(lambda x, y: x+1 if y else x, map(lambda x: wiki_exists(graph, x['data']['source'], x['data']['label'],
+    # edits = filter_edits(edges)
+    edits = edges
+    return reduce(lambda x, y: x+1 if y else x, map(lambda x: wiki_exists(graph, x['data']['source'], x['data']['id'],
                                                                    x['data']['target']), edits), 0)
 
 
-dbfile = open('sampleGraph', 'rb')
+dbfile = open('originalGraph', 'rb')
 g = pickle.load(dbfile)
 all_nodes = get_nodes(g)
 all_properties = get_properties(g)
+print(all_properties)
 dbfile.close()
 
 all_wiki_properties = get_properties(g)
 print("Printing all nodes from sample graph")
 print(all_nodes)
 
-# dbfile2 = open('sampleGraph', 'rb')
-# sg = pickle.load(dbfile2)
+dbfile2 = open('sampleGraph', 'rb')
+sg = pickle.load(dbfile2)
 # print(sg)
 
-nodes = get_nodes_display(g)
+nodes = get_nodes_display(sg)
 basic_elements = nodes
 # edges = get_properties_display(g)
 # print("Printing all edges from sample graph")
@@ -312,21 +317,19 @@ def register_callbacks(dashapp, ctx):
             
             edge_name = "SUGG_EDGE_{}_{}_{}".format(sourceId, edgeId, targetId)
             edges.append({'data': {
-                'id': edge_name,
+                'id': edgeId,
                 'source': str(sourceId),
                 'target': str(targetId),
-                'label': str(edgeId)
+                'label': [p['label'] for p in all_properties if p['value'] == str(edgeId)][0]
 
             }
             })
-            # print(edges)
             s = score(g, edges) ## Change this to original graph
-            print(s)
             return nodes + edges
 
         elif button_id == 'btn-remove-edge':
             edges = [x for x in edges if not x['data']
-                     ['id'] == "{}_{}_{}".format(sourceId, edgeId, targetId)]
+                     ['id'] == [e['data']['id'] for e in edges if e['data']['source'] == str(sourceId) and e['data']['target'] == str(targetId)][0]]
             return nodes + edges
 
         # Neither have been clicked yet (or fallback condition)

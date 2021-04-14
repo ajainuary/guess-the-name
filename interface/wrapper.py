@@ -20,7 +20,7 @@ class Entity:
 
     def properties(self):
         qres = self.owner.rdfGraph.query(
-            ''' SELECT ?p
+            ''' SELECT DISTINCT ?p
                 WHERE 
                 {
                 wd:''' + self.qid + ''' ?p ?o.
@@ -29,8 +29,21 @@ class Entity:
                 }
             }'''
         )
+        pLabel = []
+        for p in qres:
+            qres1 = self.owner.rdfGraph.query(
+                ''' SELECT ?o
+                    WHERE 
+                    {
+                        wd:''' + p[0][36:] + ''' rdfs:label ?o.
+                    }
+                '''
+            )
+            if qres1:
+                pLabel.append([r for r in qres1][0])
+
         ans = [x[0][36:] for x in qres]
-        return ans
+        return ans, pLabel
 
     def object(self, property):
         qres = self.owner.rdfGraph.query(
@@ -77,29 +90,9 @@ class Graph:
             ans.append(Entity(row[0][31:], self))
         return ans
 
-    def sample_graph(self):
-        result = self.rdfGraph.query("""
-        CONSTRUCT {
-            ?item1 ?p1 ?item.
-            ?item rdfs:label ?itemLabel.
-            ?item1 rdfs:label ?item1Label.
-        }
-        WHERE
-        {
-            Values (?category) {(wd:Q5) (wd:Q3624078) (wd:Q515)}
-            ?item wdt:P31 ?category.
-        
-            ?item1 ?p1 ?item.
-            ?item1 wdt:P31 ?category.
-        
-            ?item rdfs:label ?itemLabel.
-            ?item1 rdfs:label ?item1Label.
+    def getnode(self, qid):
+        for e in self.nodes():
+            if(e.qid == qid):
+                return e
 
-        }
-        """)
-        self.sampledGraph = rdflib.Graph()
-        self.sampledGraph.bind("wd", rdflib.term.URIRef(
-            'http://www.wikidata.org/entity/'))
-        for row in result:
-            self.sampledGraph.add(row)
-        self.sampledGraph = Graph(self.sampledGraph)
+        return None
