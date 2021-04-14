@@ -6,7 +6,9 @@ import dash_html_components as html
 import networkx as nx
 import dash_cytoscape as cyto
 import pickle
+import rdflib
 from wrapper import Entity, Graph
+from functools import reduce
 
 # Object declaration
 basic_elements = []
@@ -19,7 +21,7 @@ graph_stylesheet = [
         'selector': 'node',
         'style': {
             'background-color': '#BFD7B5',
-            'label': 'data(id)',
+            'label': 'data(label)',
             'width': "20%",
             'height': "20%",
             'font-size': '0.5em'
@@ -53,11 +55,10 @@ graph_stylesheet = [
      }}
 ]
 
-
 def get_nodes(graph):
     print(graph)
     entities = graph.nodes()
-    return list(map(lambda e: {'label': e.label[0], 'value': e.label[0]}, entities))
+    return list(map(lambda e: {'label': e.label[0], 'value': e.qid}, entities))
 
 
 def get_properties(graph):
@@ -71,7 +72,7 @@ def get_properties(graph):
 def get_nodes_display(graph):
     print(graph)
     entities = graph.nodes()
-    return list(map(lambda e: {'data': {'id': str(e.label[0]), 'label': str(e.label[0])}}, entities))
+    return list(map(lambda e: {'data': {'id': str(e.qid), 'label': str(e.label[0])}}, entities))
 
 
 def get_properties_display(graph):
@@ -99,8 +100,8 @@ def get_properties_display(graph):
     # return list(map(lambda e: {'data': {'id': str(e.label[0]), 'label': str(e.label[0])}}, entities))
 
 
-def wiki_exists(e1, p, e2):
-    qres = self.owner.rdfGraph.query(
+def wiki_exists(graph, e1, p, e2):
+    qres = graph.rdfGraph.query(
         '''
              select ?value  
             {
@@ -117,10 +118,10 @@ def filter_edits(edges):
     return list(filter(lambda x: x['data']['id'][:9] == "SUGG_EDGE", edges))
 
 
-def score(edges):
+def score(graph, edges):
     edits = filter_edits(edges)
-    reduce(lambda x, y: x+1 if y else x, map(lambda x: wiki_exists(x['data']['source'], x['data']['label'],
-                                                                   x['data']['target']), edits))
+    return reduce(lambda x, y: x+1 if y else x, map(lambda x: wiki_exists(graph, x['data']['source'], x['data']['label'],
+                                                                   x['data']['target']), edits), 0)
 
 
 dbfile = open('sampleGraph', 'rb')
@@ -296,7 +297,7 @@ def register_callbacks(dashapp, ctx):
             print("Node Added")
             nodes.append({'data': {
                 'id': str(nodeId),
-                'label': str(nodeId),
+                'label': [n['label'] for n in all_nodes if n['value'] == str(nodeId)][0],
             }
             })
             return nodes + edges
@@ -308,8 +309,8 @@ def register_callbacks(dashapp, ctx):
 
         # if int(btn_add_edge) > int(btn_remove_edge):
         elif button_id == 'btn-add-edge':
-
-            edge_name = "{}_{}_{}".format(sourceId, edgeId, targetId)
+            
+            edge_name = "SUGG_EDGE_{}_{}_{}".format(sourceId, edgeId, targetId)
             edges.append({'data': {
                 'id': edge_name,
                 'source': str(sourceId),
@@ -319,6 +320,8 @@ def register_callbacks(dashapp, ctx):
             }
             })
             # print(edges)
+            s = score(g, edges) ## Change this to original graph
+            print(s)
             return nodes + edges
 
         elif button_id == 'btn-remove-edge':
@@ -367,6 +370,10 @@ def register_callbacks(dashapp, ctx):
                         # 'opacity': 0.9
                     }
                 })
+
+            # s = score(g, edges) ## Change this to original graph
+            # print(s)
+
 
             return nodes+edges
 
