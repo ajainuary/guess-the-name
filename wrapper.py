@@ -43,6 +43,7 @@ class Entity:
         )
         ans = [x[0][31:] if isinstance(
             x[0], rdflib.term.URIRef) else x[0] for x in qres]
+
         return ans
 
     def add(self, property, object):
@@ -76,3 +77,10 @@ class Graph:
         for row in qres:
             ans.append(Entity(row[0][31:], self))
         return ans
+
+    def getnode(self, qid):
+        for e in self.nodes():
+            if(e.qid == qid):
+                return e
+
+        return None

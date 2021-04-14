@@ -199,14 +199,28 @@ def sample_graph(g):
     sampledGraph = rdflib.Graph()
     sampledGraph.bind("wd", rdflib.term.URIRef(
         'http://www.wikidata.org/entity/'))
+    sampledGraph.bind("wdt", rdflib.term.URIRef(
+        'http://www.wikidata.org/prop/direct/'))
     for row in result:
         sampledGraph.add(row)
     return Graph(sampledGraph)
 
 
-dbfile2 = open('./interface/app/dashapp1/sampleGraph', 'wb')
+
+
+dbfile2 = open('./interface/sampleGraph', 'wb')
 x = sample_graph(g)
 print(x)
+print(x.getnode("Q1001"))
+
+# for e in x.nodes():
+#     print(e)
+#     props = e.properties()
+#     for p in props:
+#         print(p)
+#         value = e.object(p)
+#         print(value)
+
 pickle.dump(x, dbfile2)
 dbfile2.close()
 

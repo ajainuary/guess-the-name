@@ -1,5 +1,4 @@
 import json
-
 import dash
 from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
@@ -74,6 +73,31 @@ def get_nodes_display(graph):
     entities = graph.nodes()
     return list(map(lambda e: {'data': {'id': str(e.label[0]), 'label': str(e.label[0])}}, entities))
 
+def get_properties_display(graph):
+    print(graph)
+    ans = []
+    print("Printing sampled graph edges")
+    for e in graph.nodes():
+        print(e.qid)
+        props = e.properties()
+        for p in props:
+            print(p)
+            value = e.object(p)
+            print(value)
+            entities = [graph.get_node(v) for v in value]
+            for v in entities:
+                ans.append({'data': {
+                                    'id': p, 
+                                    'source':e.qid, 
+                                    'target':v.qid,
+                                    'label': p 
+                                    }
+                                })
+
+    
+    return ans
+    # return list(map(lambda e: {'data': {'id': str(e.label[0]), 'label': str(e.label[0])}}, entities))
+
 
 dbfile = open('sampleGraph', 'rb')
 g = pickle.load(dbfile)
@@ -91,6 +115,11 @@ print(all_nodes)
 
 nodes = get_nodes_display(g)
 basic_elements = nodes
+# edges = get_properties_display(g)
+# print("Printing all edges from sample graph")
+# print(edges)
+# basic_elements.extend(edges)
+
 print(basic_elements)
 # basic_elements.extend(all_properties)
 
