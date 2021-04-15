@@ -58,14 +58,16 @@ graph_stylesheet = [
 def get_nodes(graph):
     print(graph)
     entities = graph.nodes()
-    return list(map(lambda e: {'label': e.label[0], 'value': e.qid}, entities))
+    print(entities[0].label)
+    print(entities[0].label[0])
+    return list(map(lambda e: {'label': str(e.label[0]), 'value': e.qid}, entities))
 
 
 def get_properties(graph):
     ans = []
     for e in graph.nodes():
         props, propsLabel = e.properties()
-        ans.extend(list(map(lambda p, pLabel: {'label': pLabel, 'value': p}, props, propsLabel)))
+        ans.extend(list(map(lambda p, pLabel: {'label': str(pLabel[0]), 'value': p}, props, propsLabel)))
     return ans
 
 
@@ -127,30 +129,35 @@ def score(graph, edges):
     return reduce(lambda x, y: x+1 if y else x, map(lambda x: wiki_exists(graph, x['data']['source'], x['data']['id'],
                                                                    x['data']['target']), edits), 0)
 
+def get_new_suggestions(edges):
+    x = list(map(lambda x: wiki_exists(g, x['data']['source'], x['data']['id'], x['data']['target']), edges))
+    print(x)
+    return [edges[v] for v in range(len(x)) if not x[v]]
 
 dbfile = open('originalGraph', 'rb')
 g = pickle.load(dbfile)
 all_nodes = get_nodes(g)
 all_properties = get_properties(g)
-print(all_properties)
+
+print(all_properties[0])
+print(all_nodes[0])
+# print(all_properties)
 dbfile.close()
 
 all_wiki_properties = get_properties(g)
-print("Printing all nodes from sample graph")
-print(all_nodes)
-
 dbfile2 = open('sampleGraph', 'rb')
 sg = pickle.load(dbfile2)
 # print(sg)
 
 nodes = get_nodes_display(sg)
+print(nodes)
 basic_elements = nodes
 # edges = get_properties_display(g)
 # print("Printing all edges from sample graph")
 # print(edges)
 # basic_elements.extend(edges)
 
-print(basic_elements)
+# print(basic_elements)
 # basic_elements.extend(all_properties)
 
 
@@ -340,34 +347,53 @@ def register_callbacks(dashapp, ctx):
             edge_name = 'SUGG_EDGE_{}_{}_{}'.format(
                 newSourceId, newEdgeId, newTargetId)
 
-            source_node = {'data': {'id': newSourceId, 'label': source_name}}
-            target_node = {'data': {'id': newTargetId, 'label': target_name}}
-            prop_edge = {'data': {
-                'id': edge_name,
-                'source': str(newSourceId),
-                'target': str(newTargetId),
-                'label': str(newEdgeId)
-            }
-            }
+            existingTargetID = ""
+            existingSourceID = ""
 
+            for n in all_nodes: 
+                if str(newTargetId) == n['label']:
+                    existingTargetID = n['value']
+                if str(newSourceId) == n['label']:
+                    existingSourceID = n['value']
+
+            if(existingSourceID == ""):
+                existingSourceID = str(newSourceId)
+
+            if(existingTargetID == ""):
+                existingTargetID = str(newTargetId)
+
+            # print("Inside New Suggestion")
+            # print(existingSourceID)
+            # print(newEdgeId)
+            # print(existingTargetID)
+
+            source_node = {'data': {'id': existingSourceID, 'label': newSourceId}}
+            target_node = {'data': {'id': existingTargetID, 'label': newTargetId}}
+            prop_edge = {'data': {
+                'id': newEdgeId,
+                'source': str(existingSourceID),
+                'target': str(existingTargetID),
+                'label': [p['label'] for p in all_properties if p['value'] == str(newEdgeId)][0]
+            }
+            }
+            print(prop_edge)
             edges.append(prop_edge)
 
-            exists = [x for x in nodes if str(newSourceId) == x['data']['id']]
-            print(str(newSourceId), exists)
+            exists = [x for x in nodes if str(newSourceId) == x['data']['label']]
             if len(exists) == 0:
                 nodes.append(source_node)
                 graph_stylesheet.append({
-                    "selector": 'node[id = "{}"]'.format(newSourceId),
+                    "selector": 'node[id = "{}"]'.format(existingSourceID),
                     "style": {
                         'background-color': "#FF69B4",
                         # 'opacity': 0.9
                     }
                 })
-            exists = [x for x in nodes if str(newTargetId) == x['data']['id']]
+            exists = [x for x in nodes if str(newTargetId) == x['data']['label']]
             if len(exists) == 0:
                 nodes.append(target_node)
                 graph_stylesheet.append({
-                    "selector": 'node[id = "{}"]'.format(newTargetId),
+                    "selector": 'node[id = "{}"]'.format(existingTargetID),
                     "style": {
                         'background-color': "#FF69B4",
                         # 'opacity': 0.9
@@ -376,13 +402,30 @@ def register_callbacks(dashapp, ctx):
 
             # s = score(g, edges) ## Change this to original graph
             # print(s)
-
+            print("Suggesting Edges")
+            print(get_new_suggestions(edges))
 
             return nodes+edges
 
         elif button_id == 'btn-del-sugg':
-            edges = [x for x in edges if not x['data']['id'] ==
-                     'SUGG_EDGE_{}_{}_{}'.format(newSourceId, newEdgeId, newTargetId)]
+            existingTargetID = ""
+            existingSourceID = ""
+
+            for n in all_nodes: 
+                if str(newTargetId) == n['label']:
+                    existingTargetID = n['value']
+                if str(newSourceId) == n['label']:
+                    existingSourceID = n['value']
+
+            if(existingSourceID == ""):
+                existingSourceID = str(newSourceId)
+
+            if(existingTargetID == ""):
+                existingTargetID = str(newTargetId)
+            
+            edges = [x for x in edges if not x['data']
+                     ['id'] == [e['data']['id'] for e in edges if e['data']['source'] == str(existingSourceID) and e['data']['target'] == str(existingTargetID)][0]]
+            
             nodes = [x for x in nodes if not x['data']['id'] == newSourceId]
             nodes = [x for x in nodes if not x['data']['id'] == newTargetId]
             return nodes + edges
