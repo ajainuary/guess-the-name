@@ -357,10 +357,10 @@ def register_callbacks(dashapp, ctx):
                     existingSourceID = n['value']
 
             if(existingSourceID == ""):
-                existingSourceID = str(newSourceId)
+                existingSourceID = str(newSourceId.replace(" ",""))
 
             if(existingTargetID == ""):
-                existingTargetID = str(newTargetId)
+                existingTargetID = str(newTargetId.replace(" ",""))
 
             # print("Inside New Suggestion")
             # print(existingSourceID)
@@ -402,6 +402,8 @@ def register_callbacks(dashapp, ctx):
 
             # s = score(g, edges) ## Change this to original graph
             # print(s)
+            print(edges)
+
             print("Suggesting Edges")
             print(get_new_suggestions(edges))
 
@@ -418,10 +420,10 @@ def register_callbacks(dashapp, ctx):
                     existingSourceID = n['value']
 
             if(existingSourceID == ""):
-                existingSourceID = str(newSourceId)
+                existingSourceID = str(newSourceId.replace(" ",""))
 
             if(existingTargetID == ""):
-                existingTargetID = str(newTargetId)
+                existingTargetID = str(newTargetId.replace(" ", ""))
             
             edges = [x for x in edges if not x['data']
                      ['id'] == [e['data']['id'] for e in edges if e['data']['source'] == str(existingSourceID) and e['data']['target'] == str(existingTargetID)][0]]
