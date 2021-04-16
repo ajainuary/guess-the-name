@@ -3,12 +3,15 @@ import dash
 from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
 import dash_html_components as html
+from dash.exceptions import PreventUpdate
+
 import networkx as nx
 import dash_cytoscape as cyto
 import pickle
 import rdflib
 from wrapper import Entity, Graph
 from functools import reduce
+from copy import deepcopy
 
 # Object declaration
 basic_elements = []
@@ -157,6 +160,8 @@ sg = pickle.load(dbfile2)
 nodes = get_nodes_display(sg)
 # print(nodes)
 basic_elements = nodes
+
+initial_game_state = deepcopy(nodes)
 # edges = get_properties_display(g)
 # print("Printing all edges from sample graph")
 # print(edges)
@@ -189,6 +194,11 @@ layout = html.Div(className="container", children=[
     html.Div([html.H1("Guess the Name")],
              className="row",
              style={'textAlign': "center"}),
+
+    # html.Div(id='body-div'),
+    html.Div(id ='body-div',
+             className="row",
+             style={'textAlign': "center",'color':'green'}),
 
     html.Div(className='row', children=[
         html.Div(className='eight columns', children=[
@@ -268,10 +278,10 @@ layout = html.Div(className="container", children=[
         html.Button('Remove Suggestion', id='btn-del-sugg',
                     n_clicks_timestamp=0),
     ]),
-    html.A(html.Button('End Game', className='three columns'),
+    html.A(html.Button('Home'),
            href='/'),
     html.Button('Reset All', id='btn-rt'),
-    html.Button('Submit', id='btn-sub'),
+    html.Button('Submit', id='btn-sub'), 
 
 ])
 
@@ -296,7 +306,7 @@ def register_callbacks(dashapp, ctx,db,Suggestion):
                         btn_sub,nodeId, edgeId, sourceId, targetId, newSourceId, newEdgeId, newTargetId):
         global nodes
         global edges
-
+        global initial_game_state
         # ctx = dash.callback_context
         if not ctx.triggered:
             return nodes+edges
@@ -440,7 +450,7 @@ def register_callbacks(dashapp, ctx,db,Suggestion):
             return nodes + edges
 
         elif button_id == 'btn-rt':
-            nodes = []
+            nodes = initial_game_state
             edges = []
         elif button_id == 'btn-sub':
             new_sugg = get_new_suggestions(edges)
@@ -452,6 +462,16 @@ def register_callbacks(dashapp, ctx,db,Suggestion):
                 db.session.commit()
 
         return nodes+edges
+
+
+    @dashapp.callback(Output(component_id='body-div', component_property='children'),
+    [Input('btn-sub', 'n_clicks')])
+    def update_output(n_clicks):
+        global edges
+        if n_clicks is None:
+            raise PreventUpdate
+        else:
+            return html.H2(f'Final Score : {score(g,edges)}')
 
     @dashapp.callback(Output('cytoscape', 'stylesheet'),
                       [Input('cytoscape', 'tapNode'),
