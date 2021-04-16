@@ -5,6 +5,8 @@ from flask_login import login_required
 from flask_bootstrap import Bootstrap
 
 from config import BaseConfig
+from app.extensions import db
+from app.models import Suggestions
 
 
 def create_app():
@@ -35,7 +37,7 @@ def register_dashapps(app):
         dashapp1.title = 'Dashapp 1'
         dashapp1.layout = layout
         ctx = dash.callback_context
-        register_callbacks(dashapp1,ctx)
+        register_callbacks(dashapp1,ctx,db,Suggestions)
         # style_callbacks(dashapp1,ctx)
 
     _protect_dashviews(dashapp1)

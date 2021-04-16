@@ -12,7 +12,7 @@ from werkzeug.urls import url_parse
 from app.extensions import db
 from app.forms import LoginForm
 from app.forms import RegistrationForm
-from app.models import User
+from app.models import User,Suggestions
 
 server_bp = Blueprint('main', __name__)
 
@@ -49,6 +49,20 @@ def logout():
     logout_user()
 
     return redirect(url_for('main.index'))
+
+@server_bp.route('/edits/')
+@login_required
+def new_edits():
+    # engine = db.create_engine('sqlite:///app.db',{})
+    # connection = engine.connect()
+    # # cur = db.connect()
+    # edits = db.Table('suggestions',autoload=True)
+    # rows = cur.fetchall()
+    edits = db.session.query(Suggestions).all()
+    for edit in edits:
+        k = edit.edit_triplet.split('_')
+        edit.final = f'{k[0]}-{k[1]}-{k[2]}'
+    return render_template('edits.html',title='New Edits',data=edits)
 
 
 @server_bp.route('/register/', methods=['GET', 'POST'])

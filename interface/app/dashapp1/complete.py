@@ -56,10 +56,10 @@ graph_stylesheet = [
 ]
 
 def get_nodes(graph):
-    print(graph)
+    # print(graph)
     entities = graph.nodes()
-    print(entities[0].label)
-    print(entities[0].label[0])
+    # print(entities[0].label)
+    # print(entities[0].label[0])
     return list(map(lambda e: {'label': str(e.label[0]), 'value': e.qid}, entities))
 
 
@@ -72,22 +72,22 @@ def get_properties(graph):
 
 
 def get_nodes_display(graph):
-    print(graph)
+    # print(graph)
     entities = graph.nodes()
     return list(map(lambda e: {'data': {'id': str(e.qid), 'label': str(e.label[0])}}, entities))
 
 
 def get_properties_display(graph):
-    print(graph)
+    # print(graph)
     ans = []
-    print("Printing sampled graph edges")
+    # print("Printing sampled graph edges")
     for e in graph.nodes():
-        print(e.qid)
+        # print(e.qid)
         props, propsLabel = e.properties()
         for p in props:
-            print(p)
+            # print(p)
             value = e.object(p)
-            print(value)
+            # print(value)
             entities = [graph.get_node(v) for v in value]
             for v in entities:
                 ans.append({'data': {
@@ -103,9 +103,9 @@ def get_properties_display(graph):
 
 
 def wiki_exists(graph, e1, p, e2):
-    print(e1)
-    print(p)
-    print(e2)
+    # print(e1)
+    # print(p)
+    # print(e2)
     qres = graph.rdfGraph.query(
         '''
              select ?value  
@@ -131,16 +131,21 @@ def score(graph, edges):
 
 def get_new_suggestions(edges):
     x = list(map(lambda x: wiki_exists(g, x['data']['source'], x['data']['id'], x['data']['target']), edges))
-    print(x)
-    return [edges[v] for v in range(len(x)) if not x[v]]
+    # print(x)
+    res = []
+    k = [edges[v] for v in range(len(x)) if not x[v]]
+    for x in k:
+        if x not in res:
+            res.append(x)
+    return res
 
 dbfile = open('originalGraph', 'rb')
 g = pickle.load(dbfile)
 all_nodes = get_nodes(g)
 all_properties = get_properties(g)
 
-print(all_properties[0])
-print(all_nodes[0])
+# print(all_properties[0])
+# print(all_nodes[0])
 # print(all_properties)
 dbfile.close()
 
@@ -150,7 +155,7 @@ sg = pickle.load(dbfile2)
 # print(sg)
 
 nodes = get_nodes_display(sg)
-print(nodes)
+# print(nodes)
 basic_elements = nodes
 # edges = get_properties_display(g)
 # print("Printing all edges from sample graph")
@@ -266,11 +271,12 @@ layout = html.Div(className="container", children=[
     html.A(html.Button('End Game', className='three columns'),
            href='/'),
     html.Button('Reset All', id='btn-rt'),
+    html.Button('Submit', id='btn-sub'),
 
 ])
 
 
-def register_callbacks(dashapp, ctx):
+def register_callbacks(dashapp, ctx,db,Suggestion):
     @dashapp.callback(Output('cytoscape', 'elements'), [Input('btn-add-node', 'n_clicks'),
                                                         Input(
                                                             'btn-remove-node', 'n_clicks'), Input('btn-add-edge', 'n_clicks'),
@@ -278,6 +284,7 @@ def register_callbacks(dashapp, ctx):
                                                             'btn-remove-edge', 'n_clicks'), Input('btn-new-sugg', 'n_clicks'),
                                                         Input(
                                                             'btn-del-sugg', 'n_clicks'), Input('btn-rt', 'n_clicks'),
+                                                        Input('btn-sub', 'n_clicks'),
                                                         Input('NodeList', 'value'), Input('EdgeList',
                                                                                           'value'), Input('SourceList', 'value'),
                                                         Input('TargetList', 'value'), Input(
@@ -286,7 +293,7 @@ def register_callbacks(dashapp, ctx):
                                                             'NewTargetList', 'value')
                                                         ])
     def add_delete_node(btn_add_node, btn_remove_node, btn_add_edge, btn_remove_edge, btn_new_sugg, btn_del_sugg, btn_rt,
-                        nodeId, edgeId, sourceId, targetId, newSourceId, newEdgeId, newTargetId):
+                        btn_sub,nodeId, edgeId, sourceId, targetId, newSourceId, newEdgeId, newTargetId):
         global nodes
         global edges
 
@@ -402,10 +409,10 @@ def register_callbacks(dashapp, ctx):
 
             # s = score(g, edges) ## Change this to original graph
             # print(s)
-            print(edges)
+            # print(edges)
 
-            print("Suggesting Edges")
-            print(get_new_suggestions(edges))
+            # print("Suggesting Edges")
+            
 
             return nodes+edges
 
@@ -435,6 +442,14 @@ def register_callbacks(dashapp, ctx):
         elif button_id == 'btn-rt':
             nodes = []
             edges = []
+        elif button_id == 'btn-sub':
+            new_sugg = get_new_suggestions(edges)
+            for edit in new_sugg:
+                k1,k2,k3,k4 = edit['data']['source'],edit['data']['label'],edit['data']['target'],edit['data']['id']
+                edit_name = f'{k1}_{k2}_{k3}_{k4}'
+                new_edit = Suggestion(edit_name)
+                db.session.add(new_edit)
+                db.session.commit()
 
         return nodes+edges
 

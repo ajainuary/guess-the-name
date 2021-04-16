@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block content %}
+<div class ='container'>
+<H1>Suggested Edits</H1>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">Edit</th>
+      <th scope="col">Date</th>
+      <th scope="col">Vote</th>
+    </tr>
+  </thead>
+  {% for item in data %}
+  <tbody>
+    <tr>
+      <th scope="row">{{item.id}}</th>
+      <td>{{item.final}}</td>
+      <td>{{item.date}}</td>
+      <td>
+<!-- https://stackoverflow.com/questions/32259704/like-and-dislike-button-counters-using-bootstrap-and-jquery -->
+		<button class="like">
+			<i class="fa fa-thumbs-o-up" aria-hidden="true" style="color:green"></i>
+		</button>
+		<button class="dislike">
+			<i class="fa fa-thumbs-o-down" aria-hidden="true" style="color:red"></i>
+		</button>
+	</td>
+    </tr>
+   {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}
