@@ -9,9 +9,15 @@ import networkx as nx
 import dash_cytoscape as cyto
 import pickle
 import rdflib
+import urllib
+from rdflib import URIRef
+
 from wrapper import Entity, Graph
 from functools import reduce
 from copy import deepcopy
+
+import os.path
+from os import path
 
 # Object declaration
 basic_elements = []
@@ -57,6 +63,107 @@ graph_stylesheet = [
          'flex-direction': 'column',
      }}
 ]
+
+def get_graph(item):
+    endpointUrl = 'https://query.wikidata.org/sparql'
+
+    ### Run this to extract the quid from the given label    
+    # query = '''
+    # SELECT Distinct ?item
+    # WHERE { 
+    # ?item ?label '''+ item+ '''@hi.
+    # ?item rdfs:label ?itemLabel. filter(lang(?itemLabel) = "hi").
+    # SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],hi". }
+    # }
+    # '''
+    
+    if(path.exists('original{}Graph'.format(item))):
+        print("Graph already found")
+        return
+
+    print("Extracting Dense Graph")
+    itemGraph = rdflib.Graph()
+    query = '''
+    CONSTRUCT {
+    ?item ?predicate ?field.
+    ?item rdfs:label ?itemLabel.
+    ?property rdfs:label ?propertyLabel.
+    ?field rdfs:label ?fieldLabel.
+
+    ?field ?predicate1 ?field1.
+    ?property1 rdfs:label ?property1Label.
+    ?field1 rdfs:label ?field1Label.
+
+    #   ?field1 ?predicate2 ?field2.
+    #   ?property2 rdfs:label ?property2Label.
+    #   ?field2 rdfs:label ?field2Label.
+    }
+    WHERE {
+    VALUES (?item) {(wd:''' + item + ''')}
+    ?item ?predicate ?field.
+    ?item rdfs:label ?itemLabel. filter(lang(?itemLabel) = "hi").
+    ?property wikibase:directClaim ?predicate.
+    ?property rdfs:label ?propertyLabel.  filter(lang(?propertyLabel) = "hi").
+    ?field rdfs:label ?fieldLabel.  filter(lang(?fieldLabel) = "hi").
+
+    ?field ?predicate1 ?field1.
+    ?property1 wikibase:directClaim ?predicate1.
+    ?property1 rdfs:label ?property1Label. filter(lang(?property1Label) = "hi").
+    ?field1 rdfs:label ?field1Label. filter(lang(?field1Label) = "hi").
+
+    #   ?field1 ?predicate2 ?field2.
+    #   ?property2 wikibase:directClaim ?predicate2.
+    #   ?property2 rdfs:label ?property2Label. filter(lang(?property2Label) = "hi").
+    #   ?field2 rdfs:label ?field2Label. filter(lang(?field2Label) = "hi").
+
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "hi". }
+    }
+    '''
+    url = endpointUrl + '?query=' + urllib.parse.quote(query)
+    result = itemGraph.parse(url)
+    print('There are ', len(result), ' triples about item ', item)
+    g = Graph(itemGraph)
+    print("Saving in file original{}Graph".format(item))
+    dbfile = open('original{}Graph'.format(item), 'wb')
+    pickle.dump(g, dbfile)
+    dbfile.close()
+
+    print("Extracting Sampled Graph")
+    result = g.rdfGraph.query("""
+        CONSTRUCT {
+            ?item1 ?p1 ?item.
+            ?item rdfs:label ?itemLabel.
+            ?item1 rdfs:label ?item1Label.
+        }
+        WHERE
+        {
+            #   (wd:Q6256)
+            Values (?category) {(wd:Q5) (wd:Q3624078) (wd:Q515)}
+            ?item wdt:P31 ?category.
+
+            ?item1 ?p1 ?item.
+            ?item1 wdt:P31 ?category.
+
+            ?item rdfs:label ?itemLabel.
+            ?item1 rdfs:label ?item1Label.
+
+        }
+        """)
+    sampledGraph = rdflib.Graph()
+    sampledGraph.bind("wd", rdflib.term.URIRef(
+        'http://www.wikidata.org/entity/'))
+    sampledGraph.bind("wdt", rdflib.term.URIRef(
+        'http://www.wikidata.org/prop/direct/'))
+    sampledGraph.bind("wikibase", rdflib.term.URIRef(
+        'http://wikiba.se/ontology#'))
+    print('There are ', len(result), ' triples about item ', item)
+    for row in result:
+        sampledGraph.add(row)
+    sg = Graph(sampledGraph)
+    print("Saving in file sampled{}Graph".format(item))
+    dbfile = open('sampled{}Graph'.format(item), 'wb')
+    pickle.dump(sg, dbfile)
+    dbfile.close()
 
 def get_nodes(graph):
     # print(graph)
@@ -142,33 +249,22 @@ def get_new_suggestions(edges):
             res.append(x)
     return res
 
-dbfile = open('originalGraph', 'rb')
+item = "Q1001"
+get_graph(item)
+dbfile = open('original{}Graph'.format(item), 'rb')
 g = pickle.load(dbfile)
 all_nodes = get_nodes(g)
 all_properties = get_properties(g)
-
-# print(all_properties[0])
-# print(all_nodes[0])
-# print(all_properties)
 dbfile.close()
 
 all_wiki_properties = get_properties(g)
-dbfile2 = open('sampleGraph', 'rb')
+dbfile2 = open('sampled{}Graph'.format(item), 'rb')
 sg = pickle.load(dbfile2)
-# print(sg)
-
+dbfile2.close()
 nodes = get_nodes_display(sg)
-# print(nodes)
 basic_elements = nodes
 state_node = {}
 initial_game_state = deepcopy(nodes)
-# edges = get_properties_display(g)
-# print("Printing all edges from sample graph")
-# print(edges)
-# basic_elements.extend(edges)
-
-# print(basic_elements)
-# basic_elements.extend(all_properties)
 
 
 styles = {
@@ -457,7 +553,7 @@ def register_callbacks(dashapp, ctx,db,Suggestion):
             new_sugg = get_new_suggestions(edges)
             for edit in new_sugg:
                 k1,k2,k3,k4 = edit['data']['source'],edit['data']['label'],edit['data']['target'],edit['data']['id']
-                edit_name = f'{k1}_{k2}_{k3}_{k4}'
+                edit_name = '{}_{}_{}_{}'.format(k1,k2,k3,k4)
                 new_edit = Suggestion(edit_name)
                 db.session.add(new_edit)
                 db.session.commit()
@@ -472,7 +568,7 @@ def register_callbacks(dashapp, ctx,db,Suggestion):
         if n_clicks is None:
             raise PreventUpdate
         else:
-            return html.H2(f'Final Score : {score(g,edges)}')
+            return html.H2('Final Score : {}'.format(score(g,edges)))
 
     @dashapp.callback(Output('cytoscape', 'stylesheet'),
                       [Input('cytoscape', 'tapNode'),

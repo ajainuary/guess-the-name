@@ -61,7 +61,7 @@ def new_edits():
     edits = db.session.query(Suggestions).all()
     for edit in edits:
         k = edit.edit_triplet.split('_')
-        edit.final = f'{k[0]}-{k[1]}-{k[2]}'
+        edit.final = '{}-{}-{}'.format(k[0],k[1],k[2])
     return render_template('edits.html',title='New Edits',data=edits)
 
 
