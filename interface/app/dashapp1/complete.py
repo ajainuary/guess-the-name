@@ -160,7 +160,7 @@ sg = pickle.load(dbfile2)
 nodes = get_nodes_display(sg)
 # print(nodes)
 basic_elements = nodes
-
+state_node = {}
 initial_game_state = deepcopy(nodes)
 # edges = get_properties_display(g)
 # print("Printing all edges from sample graph")
@@ -207,6 +207,7 @@ layout = html.Div(className="container", children=[
                 elements=basic_elements,
                 layout={'name': 'cose'},
                 stylesheet=graph_stylesheet,
+                style={'width': '150%', 'height': '750px',}
             )
         ]),
     ]),
@@ -479,6 +480,7 @@ def register_callbacks(dashapp, ctx,db,Suggestion):
                        Input('btn-reset', 'n_clicks')])
     def generate_stylesheet(inp_node, btn_new_sugg, btn_reset):
         global nodes
+        global state_node
         if not inp_node:
             return graph_stylesheet
         ctx = dash.callback_context
@@ -488,6 +490,12 @@ def register_callbacks(dashapp, ctx,db,Suggestion):
                 return graph_stylesheet
             elif button_id == 'btn-new-sugg':
                 return graph_stylesheet
+        # if state_node['data']['source'] == inp_node['source']:
+        #     print("Same node",inp_node)
+        #     return graph_stylesheet
+        # else:
+        #     print(state_node,inp_node)
+        #     state_node = inp_node
 
         follower_color = "red"
         following_color = "blue"
@@ -512,7 +520,7 @@ def register_callbacks(dashapp, ctx,db,Suggestion):
                 "border-opacity": 1,
                 "opacity": 1,
 
-                "label": "data(id)",
+                "label": "data(label)",
                 "color": "#B10DC9",
                 "text-opacity": 1,
                 "font-size": '0.5em',
