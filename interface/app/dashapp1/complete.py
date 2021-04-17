@@ -597,8 +597,8 @@ def register_callbacks(dashapp, ctx,db,Suggestion):
                 
                 edit_name = '{}_{}_{}_{}'.format(label,k2,k3,k4)
                 new_edit = Suggestion(edit_name)
-                db.session.add(new_edit)
-                db.session.commit()
+                # db.session.add(new_edit)
+                # db.session.commit()
             nodes = []
             edges = []
 
@@ -645,7 +645,7 @@ def register_callbacks(dashapp, ctx,db,Suggestion):
         if n_clicks is None:
             raise PreventUpdate
         else:
-            return html.H2('Final Score : {}'.format(score(dense_graph,edges)))
+            return html.H2('Final Score : {}'.format(score(dense_graph,edges)*10))
 
     @dashapp.callback(Output('cytoscape', 'stylesheet'),
                       [Input('cytoscape', 'tapNode'),
