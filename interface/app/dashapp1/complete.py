@@ -15,6 +15,7 @@ from rdflib import URIRef
 from wrapper import Entity, Graph
 from functools import reduce
 from copy import deepcopy
+from SPARQLWrapper import SPARQLWrapper, JSON
 
 import os.path
 from os import path
@@ -66,18 +67,23 @@ graph_stylesheet = [
 
 def get_graph(item):
     endpointUrl = 'https://query.wikidata.org/sparql'
+    # item = '"महात्मा गांधी"'
+    itemstring = "'" + item + "'"
+    query = '''
+        SELECT Distinct ?item
+        WHERE { 
+        ?item ?label '''+ itemstring+ '''@hi.
+        ?item rdfs:label ?itemLabel. filter(lang(?itemLabel) = "hi").
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "hi". }
+        }
+    '''
 
-    ### Run this to extract the quid from the given label    
-    # query = '''
-    # SELECT Distinct ?item
-    # WHERE { 
-    # ?item ?label '''+ item+ '''@hi.
-    # ?item rdfs:label ?itemLabel. filter(lang(?itemLabel) = "hi").
-    # SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],hi". }
-    # }
-    # '''
+    sparql = SPARQLWrapper(endpointUrl)
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    itemqid = sparql.query().convert()['results']['bindings'][0]['item']['value'][31:]
     
-    if(path.exists('original{}Graph'.format(item))):
+    if(path.exists('original{}Graph'.format(item.replace(" ","")))):
         print("Graph already found")
         return
 
@@ -99,7 +105,7 @@ def get_graph(item):
     #   ?field2 rdfs:label ?field2Label.
     }
     WHERE {
-    VALUES (?item) {(wd:''' + item + ''')}
+    VALUES (?item) {(wd:''' + itemqid + ''')}
     ?item ?predicate ?field.
     ?item rdfs:label ?itemLabel. filter(lang(?itemLabel) = "hi").
     ?property wikibase:directClaim ?predicate.
@@ -123,8 +129,8 @@ def get_graph(item):
     result = itemGraph.parse(url)
     print('There are ', len(result), ' triples about item ', item)
     g = Graph(itemGraph)
-    print("Saving in file original{}Graph".format(item))
-    dbfile = open('original{}Graph'.format(item), 'wb')
+    print("Saving in file original{}Graph".format(item.replace(" ","")))
+    dbfile = open('original{}Graph'.format(item.replace(" ","")), 'wb')
     pickle.dump(g, dbfile)
     dbfile.close()
 
@@ -160,8 +166,8 @@ def get_graph(item):
     for row in result:
         sampledGraph.add(row)
     sg = Graph(sampledGraph)
-    print("Saving in file sampled{}Graph".format(item))
-    dbfile = open('sampled{}Graph'.format(item), 'wb')
+    print("Saving in file sampled{}Graph".format(item.replace(" ","")))
+    dbfile = open('sampled{}Graph'.format(item.replace(" ","")), 'wb')
     pickle.dump(sg, dbfile)
     dbfile.close()
 
@@ -249,16 +255,17 @@ def get_new_suggestions(edges):
             res.append(x)
     return res
 
-item = "Q1001"
+# item = "Q1001"
+item = "नरेन्द्र मोदी"
 get_graph(item)
-dbfile = open('original{}Graph'.format(item), 'rb')
+dbfile = open('original{}Graph'.format(item.replace(" ","")), 'rb')
 g = pickle.load(dbfile)
 all_nodes = get_nodes(g)
 all_properties = get_properties(g)
 dbfile.close()
 
 all_wiki_properties = get_properties(g)
-dbfile2 = open('sampled{}Graph'.format(item), 'rb')
+dbfile2 = open('sampled{}Graph'.format(item.replace(" ","")), 'rb')
 sg = pickle.load(dbfile2)
 dbfile2.close()
 nodes = get_nodes_display(sg)
