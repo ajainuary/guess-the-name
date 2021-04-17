@@ -27,7 +27,7 @@ edges = []
 all_nodes =[]
 all_properties = []
 dense_graph = Graph()
-item = ""
+item = "नरेन्द्र मोदी"
 graph_stylesheet = [
     {
         'selector': 'node',
@@ -275,34 +275,12 @@ def gen_interface(item):
     return nodes
 
 
-# item = "Q1001"
-# item = "नरेन्द्र मोदी"
-# item = "अभिषेक बच्चन"
-# get_graph(item)
-# dbfile = open('original{}Graph'.format(item.replace(" ","")), 'rb')
-# g = pickle.load(dbfile)
-# all_nodes = get_nodes(g)
-# all_properties = get_properties(g)
-# dbfile.close()
-
 dbfile3 = open('allProperties', 'rb')
 allprops1 = pickle.load(dbfile3)
 dbfile3.close()
 all_wiki_properties = list(map(lambda p: {'label': str(p['propertyLabel']['value']), 'value': p['property']['value'][31:]}, allprops1))
 
-# all_wiki_properties = get_properties(g)
-# dbfile2 = open('sampled{}Graph'.format(item.replace(" ","")), 'rb')
-# sg = pickle.load(dbfile2)
-# dbfile2.close()
-# nodes = get_nodes_display(sg)
-# g,all_nodes,all_properties,nodes = gen_interface(item)
-# print("Grpag",g)
-# basic_elements = nodes
-# state_node = {}
-# all_nodes,all_properties,all_wiki_properties,nodes = gen_interface(item)
-# initial_game_state = deepcopy(nodes)
-# initial_game_state = []
-# nodes 
+
 
 styles = {
     'json-output': {
@@ -310,51 +288,46 @@ styles = {
         'height': 'calc(50% - 25px)',
         'border': 'thin lightgrey solid'
     },
-    'tab': {'height': 'calc(98vh - 115px)'}
+    'tab': {'height': 'calc(98vh - 115px)'},
+    
 }
-
-# for node in nodes:
-#     if 'SUGG_NODE_' in node['data']['label']:
-#         graph_stylesheet.append({
-#                     "selector": 'node[id = "{}"]'.format(node['data']['id']),
-#                     "style": {
-#                         'background-color': "#FF69B4",
-#                     }
-#                 })
 
 
 layout = html.Div(className="container", children=[
     html.Div([html.H1("Guess the Name")],
              className="row",
              style={'textAlign': "center"}),
-
-    # html.Div(id='body-div'),
-    html.Div(id ='body-div',
+    html.Div([html.H2('Final Score :')],
+            id ='body-div',
              className="row",
              style={'textAlign': "center",'color':'green'}),
-    html.Div(id ='graph-body-div',
+    html.Div([html.H2('Topic Selected :')],
+            id ='graph-body-div',
              className="row",
              style={'textAlign': "center",'color':'red'}),
 
+    
     html.Div(className='row', children=[
+        html.Div(className='four columns', children=[
+
+        dcc.Input(id='GraphGen', type='text', debounce=True,
+                  placeholder='Topic'),
+        
+        html.Button('Generate Graph', id='btn-gen-graph', n_clicks_timestamp=0),
+        
+    ]),
+
         html.Div(className='eight columns', children=[
             cyto.Cytoscape(
                 id='cytoscape',
                 elements=basic_elements,
                 layout={'name': 'cose'},
                 stylesheet=graph_stylesheet,
-                style={'width': '150%', 'height': '750px',}
+                style={'width': '100%', 'height': '550px',}
             )
         ]),
     ]),
-    html.Div(className='four columns', children=[
-
-        dcc.Input(id='GraphGen', type='text', debounce=True,
-                  placeholder='Game of'),
-        
-        html.Button('Generate Graph', id='btn-gen-graph', n_clicks_timestamp=0),
-        
-    ]),
+    
     html.Div(className='two columns', children=[
         dcc.Dropdown(
             id='NodeList',
@@ -401,32 +374,40 @@ layout = html.Div(className="container", children=[
         html.Button('Add Edge', id='btn-add-edge', n_clicks_timestamp=0),
         html.Button('Remove Edge', id='btn-remove-edge', n_clicks_timestamp=0)
     ]),
-    html.Div([
-        html.Button('Reset', id='btn-reset', n_clicks_timestamp=0),
-        # html.Button('Remove Edge', id='btn-remove-edge', n_clicks_timestamp=0)
-    ]),
 
-    html.Div(className='eight columns', children=[
+    
 
-        dcc.Input(id='NewSourceList', type='text', debounce=True,
-                  placeholder='Add New Source Node'),
-        dcc.Dropdown(
+        html.Div(className='three columns',children=[
+            dcc.Input(id='NewSourceList', type='text', debounce=True,
+                  placeholder='Add New Source Node'),]),
+        # html.Div(),
+        html.Div(className="three columns",children=[
+            dcc.Dropdown(
             id='NewEdgeList',
             options=all_wiki_properties,
             # value=all_properties[0]['value'],
             multi=False,
             placeholder="Select new property"
-        ),
-        dcc.Input(id='NewTargetList', type='text', debounce=True,
-                  placeholder='Add New Target Node'),
-        html.Button('New Suggestion', id='btn-new-sugg', n_clicks_timestamp=0),
-        html.Button('Remove Suggestion', id='btn-del-sugg',
-                    n_clicks_timestamp=0),
+        ),]),
+        html.Div(className="three columns",children=[dcc.Input(id='NewTargetList', type='text', debounce=True,
+                  placeholder='Add New Target Node'),]),
+        
+    
+    html.Div(className="eight columns",children=[html.Button('New Suggestion', 
+            id='btn-new-sugg', n_clicks_timestamp=0),html.Button('Remove Suggestion', id='btn-del-sugg',
+                    n_clicks_timestamp=0),]),
+        
+    html.Div(className="two columns",children=[]),
+    html.Div(className="sixteen columns",children=[html.A(html.Button('Home'),href='/'),
+        html.Button('Reset All', id='btn-rt',n_clicks_timestamp=0),
+        html.Button('Submit', id='btn-sub',n_clicks_timestamp=0),
+        html.Button('Reset Color', id='btn-reset', n_clicks_timestamp=0), ]),
+    
+    
+    
+    html.Div([
+        
     ]),
-    html.A(html.Button('Home'),
-           href='/'),
-    html.Button('Reset All', id='btn-rt',n_clicks_timestamp=0),
-    html.Button('Submit', id='btn-sub',n_clicks_timestamp=0), 
 
 ])
 
@@ -603,15 +584,24 @@ def register_callbacks(dashapp, ctx,db,Suggestion):
             new_sugg = get_new_suggestions(edges)
             # print(nodes)
             # print(edges)
-            nodes = []
-            edges = []
-
+            
             for edit in new_sugg:
+                label = ""
                 k1,k2,k3,k4 = edit['data']['source'],edit['data']['label'],edit['data']['target'],edit['data']['id']
-                edit_name = '{}_{}_{}_{}'.format(k1,k2,k3,k4)
+                if 'Q' == k1[0]:
+                    for node in nodes:
+                        if node['data']['id'] == k1:    
+                            label = node['data']['label']
+                else:
+                    label = k1
+                
+                edit_name = '{}_{}_{}_{}'.format(label,k2,k3,k4)
                 new_edit = Suggestion(edit_name)
                 db.session.add(new_edit)
                 db.session.commit()
+            nodes = []
+            edges = []
+
         elif button_id == 'btn-gen-graph':
             if newGraphId == '':
                 item = "नरेन्द्र मोदी"
@@ -646,7 +636,7 @@ def register_callbacks(dashapp, ctx,db,Suggestion):
         if n_clicks is None:
             raise PreventUpdate
         else:
-            return html.H2('Item Selected : {}'.format(item))
+            return html.H2('Topic Selected : {}'.format(item))
 
     @dashapp.callback(Output(component_id='body-div', component_property='children'),
     [Input('btn-sub', 'n_clicks')])

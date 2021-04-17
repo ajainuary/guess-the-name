@@ -8,7 +8,7 @@
 {% else  %}
   <h1>Welcome, {{ current_user.username }}!</h1>
   <button type="button" class="btn btn-outline-secondary" data-mdb-ripple-color="dark"><a href="{{ url_for('/dashboard/') }}">Play Now!</a></button>
-  <button type="button" class="btn btn-outline-warning" data-mdb-ripple-color="dark">Leaderboard</button>
+  <button type="button" class="btn btn-outline-warning" data-mdb-ripple-color="dark"><a href="{{ url_for('main.leaderboard') }}">Leaderboard</button>
   <button type="button" class="btn btn-outline-success" data-mdb-ripple-color="dark"><a href="{{ url_for('main.new_edits') }}">New Edits</a></button>
   
 {% endif %}

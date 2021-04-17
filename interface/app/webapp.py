@@ -64,6 +64,20 @@ def new_edits():
         edit.final = '{}-{}-{}'.format(k[0],k[1],k[2])
     return render_template('edits.html',title='New Edits',data=edits)
 
+@server_bp.route('/leaderboard/')
+@login_required
+def leaderboard():
+    # engine = db.create_engine('sqlite:///app.db',{})
+    # connection = engine.connect()
+    # # cur = db.connect()
+    # edits = db.Table('suggestions',autoload=True)
+    # rows = cur.fetchall()
+    # edits = db.session.query(Suggestions).all()
+    # for edit in edits:
+    #     k = edit.edit_triplet.split('_')
+    #     edit.final = '{}-{}-{}'.format(k[0],k[1],k[2])
+    return render_template('leaderboard.html',title='Leaderboard')
+
 
 @server_bp.route('/register/', methods=['GET', 'POST'])
 def register():
