@@ -7,7 +7,7 @@ Find connections between different personalities and places and make suggestions
 
 ## Installation
 ### Backend
-The bckend requires SPARQL and rdflib to work
+The backend requires SPARQL and rdflib to work
 `pip install -r requirements.txt`
 
 ### Frontend
