@@ -73,7 +73,7 @@ class Entity:
 class Graph:
     """A wrapper for the rdflib.Graph"""
 
-    def __init__(self, rdfGraph: rdflib.Graph):
+    def __init__(self, rdfGraph: rdflib.Graph=None):
         self.rdfGraph = rdfGraph
         self.sampledGraph = None
 

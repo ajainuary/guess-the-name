@@ -16,7 +16,7 @@ from wrapper import Entity, Graph
 from functools import reduce
 from copy import deepcopy
 from SPARQLWrapper import SPARQLWrapper, JSON
-
+from time import sleep
 import os.path
 from os import path
 
@@ -24,8 +24,10 @@ from os import path
 basic_elements = []
 nodes = []
 edges = []
-
-
+all_nodes =[]
+all_properties = []
+dense_graph = Graph()
+item = ""
 graph_stylesheet = [
     {
         'selector': 'node',
@@ -246,7 +248,8 @@ def score(graph, edges):
                                                                    x['data']['target']), edits), 0)
 
 def get_new_suggestions(edges):
-    x = list(map(lambda x: wiki_exists(g, x['data']['source'], x['data']['id'], x['data']['target']), edges))
+    global dense_graph
+    x = list(map(lambda x: wiki_exists(dense_graph, x['data']['source'], x['data']['id'], x['data']['target']), edges))
     # print(x)
     res = []
     k = [edges[v] for v in range(len(x)) if not x[v]]
@@ -255,24 +258,51 @@ def get_new_suggestions(edges):
             res.append(x)
     return res
 
+
+def gen_interface(item):
+    global all_nodes,all_properties,dense_graph
+    get_graph(item)
+    dbfile = open('original{}Graph'.format(item.replace(" ","")), 'rb')
+    dense_graph = pickle.load(dbfile)
+    all_nodes = get_nodes(dense_graph)
+    all_properties = get_properties(dense_graph)
+    dbfile.close()
+
+    dbfile2 = open('sampled{}Graph'.format(item.replace(" ","")), 'rb')
+    sg = pickle.load(dbfile2)
+    dbfile2.close()
+    nodes = get_nodes_display(sg)
+    return nodes
+
+
 # item = "Q1001"
-item = "नरेन्द्र मोदी"
-get_graph(item)
-dbfile = open('original{}Graph'.format(item.replace(" ","")), 'rb')
-g = pickle.load(dbfile)
-all_nodes = get_nodes(g)
-all_properties = get_properties(g)
-dbfile.close()
+# item = "नरेन्द्र मोदी"
+# item = "अभिषेक बच्चन"
+# get_graph(item)
+# dbfile = open('original{}Graph'.format(item.replace(" ","")), 'rb')
+# g = pickle.load(dbfile)
+# all_nodes = get_nodes(g)
+# all_properties = get_properties(g)
+# dbfile.close()
 
-all_wiki_properties = get_properties(g)
-dbfile2 = open('sampled{}Graph'.format(item.replace(" ","")), 'rb')
-sg = pickle.load(dbfile2)
-dbfile2.close()
-nodes = get_nodes_display(sg)
-basic_elements = nodes
-state_node = {}
-initial_game_state = deepcopy(nodes)
+dbfile3 = open('allProperties', 'rb')
+allprops1 = pickle.load(dbfile3)
+dbfile3.close()
+all_wiki_properties = list(map(lambda p: {'label': str(p['propertyLabel']['value']), 'value': p['property']['value'][31:]}, allprops1))
 
+# all_wiki_properties = get_properties(g)
+# dbfile2 = open('sampled{}Graph'.format(item.replace(" ","")), 'rb')
+# sg = pickle.load(dbfile2)
+# dbfile2.close()
+# nodes = get_nodes_display(sg)
+# g,all_nodes,all_properties,nodes = gen_interface(item)
+# print("Grpag",g)
+# basic_elements = nodes
+# state_node = {}
+# all_nodes,all_properties,all_wiki_properties,nodes = gen_interface(item)
+# initial_game_state = deepcopy(nodes)
+# initial_game_state = []
+# nodes 
 
 styles = {
     'json-output': {
@@ -302,6 +332,9 @@ layout = html.Div(className="container", children=[
     html.Div(id ='body-div',
              className="row",
              style={'textAlign': "center",'color':'green'}),
+    html.Div(id ='graph-body-div',
+             className="row",
+             style={'textAlign': "center",'color':'red'}),
 
     html.Div(className='row', children=[
         html.Div(className='eight columns', children=[
@@ -313,6 +346,14 @@ layout = html.Div(className="container", children=[
                 style={'width': '150%', 'height': '750px',}
             )
         ]),
+    ]),
+    html.Div(className='four columns', children=[
+
+        dcc.Input(id='GraphGen', type='text', debounce=True,
+                  placeholder='Game of'),
+        
+        html.Button('Generate Graph', id='btn-gen-graph', n_clicks_timestamp=0),
+        
     ]),
     html.Div(className='two columns', children=[
         dcc.Dropdown(
@@ -384,8 +425,8 @@ layout = html.Div(className="container", children=[
     ]),
     html.A(html.Button('Home'),
            href='/'),
-    html.Button('Reset All', id='btn-rt'),
-    html.Button('Submit', id='btn-sub'), 
+    html.Button('Reset All', id='btn-rt',n_clicks_timestamp=0),
+    html.Button('Submit', id='btn-sub',n_clicks_timestamp=0), 
 
 ])
 
@@ -397,20 +438,22 @@ def register_callbacks(dashapp, ctx,db,Suggestion):
                                                         Input(
                                                             'btn-remove-edge', 'n_clicks'), Input('btn-new-sugg', 'n_clicks'),
                                                         Input(
-                                                            'btn-del-sugg', 'n_clicks'), Input('btn-rt', 'n_clicks'),
-                                                        Input('btn-sub', 'n_clicks'),
+                                                            'btn-del-sugg', 'n_clicks'),Input('btn-sub', 'n_clicks_timestamp'), 
+                                                        Input('btn-rt', 'n_clicks'),Input('btn-gen-graph', 'n_clicks'),
                                                         Input('NodeList', 'value'), Input('EdgeList',
                                                                                           'value'), Input('SourceList', 'value'),
                                                         Input('TargetList', 'value'), Input(
                                                             'NewSourceList', 'value'),
-                                                        Input('NewEdgeList', 'value'), Input(
+                                                        Input('NewEdgeList', 'value'),Input(
+                                                            'GraphGen', 'value'), Input(
                                                             'NewTargetList', 'value')
                                                         ])
-    def add_delete_node(btn_add_node, btn_remove_node, btn_add_edge, btn_remove_edge, btn_new_sugg, btn_del_sugg, btn_rt,
-                        btn_sub,nodeId, edgeId, sourceId, targetId, newSourceId, newEdgeId, newTargetId):
+    def add_delete_node(btn_add_node, btn_remove_node, btn_add_edge, btn_remove_edge, btn_new_sugg, btn_del_sugg,btn_sub,
+                        btn_rt,btn_gen_graph,nodeId, edgeId, sourceId, targetId, newSourceId, newEdgeId, newGraphId,newTargetId):
         global nodes
         global edges
         global initial_game_state
+        global all_nodes,all_properties,basic_elements,dense_graph,item
         # ctx = dash.callback_context
         if not ctx.triggered:
             return nodes+edges
@@ -452,7 +495,7 @@ def register_callbacks(dashapp, ctx,db,Suggestion):
 
             }
             })
-            s = score(g, edges) ## Change this to original graph
+            s = score(dense_graph, edges) ## Change this to original graph
             return nodes + edges
 
         elif button_id == 'btn-remove-edge':
@@ -494,7 +537,7 @@ def register_callbacks(dashapp, ctx,db,Suggestion):
                 'id': newEdgeId,
                 'source': str(existingSourceID),
                 'target': str(existingTargetID),
-                'label': [p['label'] for p in all_properties if p['value'] == str(newEdgeId)][0]
+                'label': [p['label'] for p in all_wiki_properties if p['value'] == str(newEdgeId)][0]
             }
             }
             print(prop_edge)
@@ -558,24 +601,61 @@ def register_callbacks(dashapp, ctx,db,Suggestion):
             edges = []
         elif button_id == 'btn-sub':
             new_sugg = get_new_suggestions(edges)
+            # print(nodes)
+            # print(edges)
+            nodes = []
+            edges = []
+
             for edit in new_sugg:
                 k1,k2,k3,k4 = edit['data']['source'],edit['data']['label'],edit['data']['target'],edit['data']['id']
                 edit_name = '{}_{}_{}_{}'.format(k1,k2,k3,k4)
                 new_edit = Suggestion(edit_name)
                 db.session.add(new_edit)
                 db.session.commit()
+        elif button_id == 'btn-gen-graph':
+            if newGraphId == '':
+                item = "नरेन्द्र मोदी"
+            else:
+                item = newGraphId
+            nodes = gen_interface(item)
+            initial_game_state = deepcopy(nodes)
+            basic_elements = nodes
+            
+            return nodes+edges
+
 
         return nodes+edges
 
+    @dashapp.callback([Output(component_id='SourceList', component_property='options'),
+                        Output(component_id='EdgeList', component_property='options'),
+                        Output(component_id='TargetList', component_property='options'),
+                        Output(component_id='NodeList', component_property='options')],
+    [Input('graph-body-div', 'children')])
+    def update_graph(newGraphId):
+        sleep(2)
+        global all_nodes,all_properties
+        print("Source",len(all_nodes),len(all_properties))
+        return all_nodes,all_properties,all_nodes,all_nodes
+    
+    @dashapp.callback(Output(component_id='graph-body-div', component_property='children'),
+    [Input('btn-gen-graph', 'n_clicks')])
+    def update_output(n_clicks):
+        if n_clicks == 1:
+            sleep(2)
+        global item
+        if n_clicks is None:
+            raise PreventUpdate
+        else:
+            return html.H2('Item Selected : {}'.format(item))
 
     @dashapp.callback(Output(component_id='body-div', component_property='children'),
     [Input('btn-sub', 'n_clicks')])
     def update_output(n_clicks):
-        global edges
+        global edges,dense_graph
         if n_clicks is None:
             raise PreventUpdate
         else:
-            return html.H2('Final Score : {}'.format(score(g,edges)))
+            return html.H2('Final Score : {}'.format(score(dense_graph,edges)))
 
     @dashapp.callback(Output('cytoscape', 'stylesheet'),
                       [Input('cytoscape', 'tapNode'),
@@ -592,6 +672,8 @@ def register_callbacks(dashapp, ctx,db,Suggestion):
             if button_id == 'btn-reset':
                 return graph_stylesheet
             elif button_id == 'btn-new-sugg':
+                return graph_stylesheet
+            elif button_id == 'btn-gen-graph':
                 return graph_stylesheet
         # if state_node['data']['source'] == inp_node['source']:
         #     print("Same node",inp_node)
